@@ -79,11 +79,6 @@ _G.packer_plugins = {
     path = "/Users/ekassinghchhabra/.local/share/nvim/site/pack/packer/start/chadtree",
     url = "https://github.com/ms-jpq/chadtree"
   },
-  ["coc.nvim"] = {
-    loaded = true,
-    path = "/Users/ekassinghchhabra/.local/share/nvim/site/pack/packer/start/coc.nvim",
-    url = "https://github.com/neoclide/coc.nvim"
-  },
   fzf = {
     loaded = true,
     path = "/Users/ekassinghchhabra/.local/share/nvim/site/pack/packer/start/fzf",

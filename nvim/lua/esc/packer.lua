@@ -12,7 +12,6 @@ return require('packer').startup(function(use)
     --use 'ms-jpq/coq_nvim'
     use 'ryanoasis/vim-devicons'
     use 'ms-jpq/chadtree'
-    use {'neoclide/coc.nvim', branch = 'release'}
     use 'junegunn/fzf'
     use 'vim-airline/vim-airline-themes'
     use 'ray-x/go.nvim'
