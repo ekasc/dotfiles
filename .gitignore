@@ -1,6 +1,5 @@
 .DS_Store
 .mono/
-"Microsoft\VisualStudio Services/"
 configstore/
 gh/
 gtk-2.0/
