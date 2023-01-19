@@ -2240,6 +2240,6 @@ map cmd+v       paste_from_clipboard
 
 
 # BEGIN_KITTY_THEME
-# Black Metal
+# Rosé Pine Moon
 include current-theme.conf
 # END_KITTY_THEME
