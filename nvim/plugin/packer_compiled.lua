@@ -195,6 +195,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/ekassinghchhabra/.local/share/nvim/site/pack/packer/start/vim-kitty",
     url = "https://github.com/fladson/vim-kitty"
+  },
+  ["vim-svelte"] = {
+    loaded = true,
+    path = "/Users/ekassinghchhabra/.local/share/nvim/site/pack/packer/start/vim-svelte",
+    url = "https://github.com/evanleck/vim-svelte"
   }
 }
 

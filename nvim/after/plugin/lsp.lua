@@ -8,6 +8,7 @@ lsp.ensure_installed({
 	'gopls',
 	'sumneko_lua',
 	'pyright',
+	'sqlls',
 })
 
 local cmp = require('cmp')
