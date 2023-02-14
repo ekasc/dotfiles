@@ -6,7 +6,7 @@ lsp.ensure_installed({
 	'tsserver',
 	'eslint',
 	'gopls',
-	'sumneko_lua',
+	'lua_ls',
 	'pyright',
 	'sqlls',
 })

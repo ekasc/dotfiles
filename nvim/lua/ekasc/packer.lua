@@ -51,4 +51,5 @@ return require('packer').startup(function(use)
 	use 'ray-x/go.nvim'
 	use 'ray-x/guihua.lua' -- recommanded if need floating window support
 	use 'evanleck/vim-svelte'
+	use 'jose-elias-alvarez/typescript.nvim'
 end)
