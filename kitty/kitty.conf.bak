@@ -1014,11 +1014,11 @@ background_opacity 0.4
 #: this option when reloading the config will only work if
 #: dynamic_background_opacity was enabled in the original config.
 
-background_image ~/Pictures/Wallpapers/1.png
+background_image ~/Pictures/terminal wallpapers/forest.png
 
 #: Path to a background image. Must be in PNG format.
 
-#background_image_layout clamped
+background_image_layout scaled
 
 #: Whether to tile, scale or clamp the background image. The value can
 #: be one of tiled, mirror-tiled, scaled, clamped or centered.
@@ -1043,7 +1043,7 @@ background_tint 0.1
 #: only if background_opacity is set and transparent windows are
 #: supported or background_image is set.
 
-dim_opacity 1
+dim_opacity 0
 
 #: How much to dim text that has the DIM/FAINT attribute set. One
 #: means no dimming and zero means fully dimmed (i.e. invisible).
@@ -2240,6 +2240,6 @@ map cmd+v       paste_from_clipboard
 
 
 # BEGIN_KITTY_THEME
-# Rosé Pine Moon
+# Ayu
 include current-theme.conf
 # END_KITTY_THEME
