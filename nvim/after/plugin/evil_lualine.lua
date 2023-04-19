@@ -3,20 +3,20 @@
 -- Credit: glepnir
 local lualine = require('lualine')
 
-local ayu = require('ayu.colors')
+local cat = require('catppuccin.palettes').get_palette()
 
 local colors = {
-	bg       = ayu.sumiInk0,
-	fg       = ayu.fuijWhite,
-	yellow   = ayu.autumnYellow,
-	cyan     = ayu.crystalBlue,
-	darkblue = ayu.dragonBlue,
-	green    = ayu.springGreen,
-	orange   = ayu.surimiOrange,
-	violet   = ayu.oniViolet,
-	magenta  = ayu.peachRed,
-	blue     = ayu.crystalBlue,
-	red      = ayu.samuraiRed
+	bg       = cat.base,
+	fg       = cat.fuijWhite,
+	yellow   = cat.yellow,
+	cyan     = cat.sky,
+	darkblue = cat.sapphire,
+	green    = cat.green,
+	orange   = cat.red,
+	violet   = cat.mauve,
+	magenta  = cat.maroon,
+	blue     = cat.blue,
+	red      = cat.red,
 }
 --local kanagawa = require('kanagawa.colors').setup()
 
@@ -70,13 +70,15 @@ local config = {
 		-- Disable sections and component separators
 		component_separators = '',
 		section_separators = '',
-		theme = {
-			-- We are going to use lualine_c an lualine_x as left and
-			-- right section. Both are highlighted by c theme .  So we
-			-- are just setting default looks o statusline
-			normal = { c = { fg = colors.fg, bg = colors.bg } },
-			inactive = { c = { fg = colors.fg, bg = colors.bg } },
-		},
+		--theme = {
+
+		--	-- We are going to use lualine_c an lualine_x as left and
+		--	-- right section. Both are highlighted by c theme .  So we
+		--	-- are just setting default looks o statusline
+		--	normal = { c = { fg = colors.fg, bg = colors.bg } },
+		--	inactive = { c = { fg = colors.fg, bg = colors.bg } },
+		--},
+		theme = "catppuccin"
 	},
 	sections = {
 		-- these are to remove the defaults

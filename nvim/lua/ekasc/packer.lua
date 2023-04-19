@@ -10,7 +10,7 @@ return require('packer').startup(function(use)
 	--use 'navarasu/onedark.nvim'
 
 	--use "rebelot/kanagawa.nvim"
-	use "Shatur/neovim-ayu"
+	--use "Shatur/neovim-ayu"
 
 	--use({
 	--	'rose-pine/neovim',
@@ -19,6 +19,7 @@ return require('packer').startup(function(use)
 	--		vim.cmd('colorscheme rose-pine')
 	--	end
 	--})
+	use { "catppuccin/nvim", as = "catppuccin" }
 	use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
 
 	use "fladson/vim-kitty"
