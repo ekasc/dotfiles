@@ -121,4 +121,5 @@ end
 --OneDarkTheme()
 --KanagawaTheme()
 --AyuTheme()
+
 CatTheme()

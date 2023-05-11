@@ -57,4 +57,5 @@ return require('packer').startup(function(use)
 	use 'andweeb/presence.nvim'
 	use 'nvim-lua/plenary.nvim' --" don't forget to add this one if you don't have it yet!
 	use 'ThePrimeagen/harpoon'
+	use "princejoogie/tailwind-highlight.nvim"
 end)
