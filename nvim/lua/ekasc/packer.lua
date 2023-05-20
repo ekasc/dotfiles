@@ -58,4 +58,5 @@ return require('packer').startup(function(use)
 	use 'nvim-lua/plenary.nvim' --" don't forget to add this one if you don't have it yet!
 	use 'ThePrimeagen/harpoon'
 	use "princejoogie/tailwind-highlight.nvim"
+	use 'OmniSharp/Omnisharp-vim'
 end)

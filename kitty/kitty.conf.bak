@@ -993,7 +993,7 @@ tab_powerline_style slanted
 
 #: The foreground and background colors.
 
-background_opacity 0.4
+#background_opacity 0.4
 
 #: The opacity of the background. A number between zero and one, where
 #: one is opaque and zero is fully transparent. This will only work if
@@ -1014,11 +1014,11 @@ background_opacity 0.4
 #: this option when reloading the config will only work if
 #: dynamic_background_opacity was enabled in the original config.
 
-background_image ~/Pictures/terminal wallpapers/forest.png
+# background_image ~/Pictures/terminal wallpapers/forest.png
 
 #: Path to a background image. Must be in PNG format.
 
-background_image_layout scaled
+#background_image_layout scaled
 
 #: Whether to tile, scale or clamp the background image. The value can
 #: be one of tiled, mirror-tiled, scaled, clamped or centered.
@@ -1035,7 +1035,7 @@ background_image_layout scaled
 #: decrease_background_opacity) or the remote control facility.
 #: Changing this option by reloading the config is not supported.
 
-background_tint 0.1
+#background_tint 0.1
 
 #: How much to tint the background image by the background color.
 #: This option makes it easier to read the text. Tinting is done using
@@ -1043,7 +1043,7 @@ background_tint 0.1
 #: only if background_opacity is set and transparent windows are
 #: supported or background_image is set.
 
-dim_opacity 0
+#dim_opacity 1
 
 #: How much to dim text that has the DIM/FAINT attribute set. One
 #: means no dimming and zero means fully dimmed (i.e. invisible).
@@ -1411,7 +1411,8 @@ dim_opacity 0
 #: means to use the default system color, a value of background means
 #: to use the background color of the currently active window and
 #: finally you can use an arbitrary color, such as #12af59 or red.
-# macos_titlebar_color system
+
+macos_titlebar_color dark
 
 #: The color of the kitty window's titlebar on macOS. A value of
 #: system means to use the default system color, light or dark can
@@ -1465,7 +1466,7 @@ dim_opacity 0
 #: value of 0.75 will result in rendering that looks similar to sub-
 #: pixel antialiasing at common font sizes.
 
-# macos_traditional_fullscreen no
+macos_traditional_fullscreen no
 
 #: Use the macOS traditional full-screen transition, that is faster,
 #: but less pretty.
@@ -2240,6 +2241,6 @@ map cmd+v       paste_from_clipboard
 
 
 # BEGIN_KITTY_THEME
-# kanagawabones
+# Catppuccin-Frappe
 include current-theme.conf
 # END_KITTY_THEME

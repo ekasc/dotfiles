@@ -79,6 +79,11 @@ _G.packer_plugins = {
     path = "/Users/ekassinghchhabra/.local/share/nvim/site/pack/packer/start/LuaSnip",
     url = "https://github.com/L3MON4D3/LuaSnip"
   },
+  ["Omnisharp-vim"] = {
+    loaded = true,
+    path = "/Users/ekassinghchhabra/.local/share/nvim/site/pack/packer/start/Omnisharp-vim",
+    url = "https://github.com/OmniSharp/Omnisharp-vim"
+  },
   catppuccin = {
     loaded = true,
     path = "/Users/ekassinghchhabra/.local/share/nvim/site/pack/packer/start/catppuccin",

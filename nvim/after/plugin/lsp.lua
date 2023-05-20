@@ -36,6 +36,28 @@ require('lspconfig').tailwindcss.setup({
 	end
 })
 
+require('lspconfig').clangd.setup({
+	cmd = { "clangd", "--background-index" },
+	filetype = { "c", "cpp", "h" },
+	init_options = {
+		clangdFileStatus = true,
+		usePlaceholders = true,
+		completeUnimported = true,
+		semanticHighlighting = true,
+		clangdSemanticHighlights = true,
+	},
+	settings = {
+		clangd = {
+			formatting = {
+				enable = true,
+				style = "file",
+				fallbackStyle = "llvm",
+				tabSize = 4,
+			},
+		},
+	},
+})
+
 lsp.on_attach(function(client, bufnr)
 	local opts = { buffer = bufnr, remap = false }
 

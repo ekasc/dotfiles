@@ -36,6 +36,3 @@ vim.keymap.set("n", "<leader>s", ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left>
 
 -- GoImport
 vim.keymap.set("n", "<leader>l", "<cmd>GoImport<CR>")
-
-
-
