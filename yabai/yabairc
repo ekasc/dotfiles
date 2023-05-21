@@ -41,9 +41,12 @@ yabai -m config layout bsp \
 	  left_padding 0 \
 	  right_padding	0 \
 	  window_gap 6 \
+	  window_shadow off \
+	  window_border_blur on \
 	  external_bar all:0:30
 
 yabai -m rule --add app="^System Preferences$" sticky=on manage=off
+yabai -m rule --add app="^Stats$" sticky=on manage=off
 	  
 
 

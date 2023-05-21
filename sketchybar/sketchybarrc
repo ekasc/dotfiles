@@ -5,6 +5,9 @@
 # For a more advanced configuration example see my dotfiles:
 # https://github.com/FelixKratz/dotfiles
 
+source "$HOME/.config/sketchybar/icons.sh"
+source "$HOME/.config/sketchybar/colors.sh"
+
 PLUGIN_DIR="$HOME/.config/sketchybar/plugins"
 ITEM_DIR="$HOME/.config/sketchybar/items"
 
@@ -16,7 +19,7 @@ ITEM_DIR="$HOME/.config/sketchybar/items"
 # https://felixkratz.github.io/SketchyBar/config/tricks#color-picker
 
 sketchybar --bar height=30 \
-	blur_radius=10 \
+	blur_radius=90 \
 	position=bottom \
 	sticky=off       \
 	padding_left=10  \
@@ -30,7 +33,7 @@ sketchybar --bar height=30 \
 
 sketchybar --default icon.font="Hack Nerd Font:Bold:17.0"  \
 	icon.color=0xffffffff                 \
-	label.font="Hack Nerd Font:Bold:17.0" \
+	label.font="Hack Nerd Font:Bold:18.0" \
 	label.color=0xffffffff                \
 	padding_left=5                        \
 	padding_right=5                       \
@@ -43,6 +46,8 @@ sketchybar --default icon.font="Hack Nerd Font:Bold:17.0"  \
 # Now we add some mission control spaces:
 # https://felixkratz.github.io/SketchyBar/config/components#space----associate-mission-control-spaces-with-an-item
 # to indicate active and available mission control spaces
+
+source "$ITEM_DIR/apple.sh"
 
 SPACE_ICONS=("1" "2" "3" "4" "5" "6" "7" "8" "9" "10")
 
@@ -91,8 +96,8 @@ sketchybar --add item space_separator left	\
 	sketchybar \
 	--add item clock right					\
 	--set clock								\
-	update_freq=1							\
-	icon=									\
+	update_freq=60							\
+	icon=									\
 	script="$PLUGIN_DIR/clock.sh"			\
 	\
 	--add item volume right                 \

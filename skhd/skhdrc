@@ -3,7 +3,7 @@ shift + alt - r : yabai --restart-service && skhd --reload
 
 # terminal
 #alt - return : /Applications/Alacritty.app/Contents/MacOS/alacritty
-alt - return : /Applications/kitty.app/Contents/MacOS/kitty -d ~
+alt - return : /Applications/Warp.app/Contents/MacOS/stable 
 
 # browser
 # alt - b : /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome
