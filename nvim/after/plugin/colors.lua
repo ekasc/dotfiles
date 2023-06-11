@@ -52,12 +52,13 @@
 --
 --	vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
 --	vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+--  vim.api.nvim_set_hl(0, "SignColumn", { bg = 'none' })
 --end
 
 require("catppuccin").setup({
 	flavour = "mocha", -- latte, frappe, macchiato, mocha
 	background = {
-	                   -- :h background
+		-- :h background
 		light = "latte",
 		dark = "mocha",
 	},
@@ -70,7 +71,7 @@ require("catppuccin").setup({
 		percentage = 0.15,
 	},
 	no_italic = false, -- Force no italic
-	no_bold = false,   -- Force no bold
+	no_bold = false, -- Force no bold
 	styles = {
 		comments = { "italic" },
 		conditionals = { "italic" },
@@ -107,19 +108,30 @@ function CatTheme(color)
 
 	vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
 	vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+	vim.api.nvim_set_hl(0, "SignColumn", { bg = 'none' })
 end
 
---function AyuTheme(color)
---	color = color or "ayu"
---	vim.cmd.colorscheme(color)
---
---	vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
---	vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
---end
+function AyuTheme(color)
+	color = color or "ayu"
+	vim.cmd.colorscheme(color)
+
+	vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+	vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+	vim.api.nvim_set_hl(0, "SignColumn", { bg = 'none' })
+end
+
+function KisslandTheme(color)
+	color = color or "kissland"
+	vim.cmd.colorscheme(color)
+
+	vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+	vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+	vim.api.nvim_set_hl(0, "SignColumn", { bg = 'none' })
+end
 
 --RosePineTheme()
 --OneDarkTheme()
 --KanagawaTheme()
 --AyuTheme()
-
-CatTheme()
+--CatTheme()
+KisslandTheme()

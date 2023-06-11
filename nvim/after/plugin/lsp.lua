@@ -27,7 +27,7 @@ lsp.set_preferences({
 
 require('lspconfig').tailwindcss.setup({
 	on_attach = function(client, bufnr)
-		-- rest of you config
+		-- rest of your config
 		tw_highlight.setup(client, bufnr, {
 			single_column = false,
 			mode = 'background',

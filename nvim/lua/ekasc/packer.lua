@@ -10,7 +10,7 @@ return require('packer').startup(function(use)
 	--use 'navarasu/onedark.nvim'
 
 	--use "rebelot/kanagawa.nvim"
-	--use "Shatur/neovim-ayu"
+	use "Shatur/neovim-ayu"
 
 	--use({
 	--	'rose-pine/neovim',
@@ -20,6 +20,7 @@ return require('packer').startup(function(use)
 	--	end
 	--})
 	use { "catppuccin/nvim", as = "catppuccin" }
+	use "ekasc/kissland.nvim"
 	use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
 
 	use "fladson/vim-kitty"
@@ -59,4 +60,5 @@ return require('packer').startup(function(use)
 	use 'ThePrimeagen/harpoon'
 	use "princejoogie/tailwind-highlight.nvim"
 	use 'OmniSharp/Omnisharp-vim'
+	use 'rktjmp/lush.nvim'
 end)

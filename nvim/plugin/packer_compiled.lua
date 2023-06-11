@@ -134,6 +134,11 @@ _G.packer_plugins = {
     path = "/Users/ekassinghchhabra/.local/share/nvim/site/pack/packer/start/harpoon",
     url = "https://github.com/ThePrimeagen/harpoon"
   },
+  ["kissland.nvim"] = {
+    loaded = true,
+    path = "/Users/ekassinghchhabra/.local/share/nvim/site/pack/packer/start/kissland.nvim",
+    url = "https://github.com/ekasc/kissland.nvim"
+  },
   ["lsp-zero.nvim"] = {
     loaded = true,
     path = "/Users/ekassinghchhabra/.local/share/nvim/site/pack/packer/start/lsp-zero.nvim",
@@ -144,6 +149,11 @@ _G.packer_plugins = {
     path = "/Users/ekassinghchhabra/.local/share/nvim/site/pack/packer/start/lualine.nvim",
     url = "https://github.com/nvim-lualine/lualine.nvim"
   },
+  ["lush.nvim"] = {
+    loaded = true,
+    path = "/Users/ekassinghchhabra/.local/share/nvim/site/pack/packer/start/lush.nvim",
+    url = "https://github.com/rktjmp/lush.nvim"
+  },
   ["mason-lspconfig.nvim"] = {
     loaded = true,
     path = "/Users/ekassinghchhabra/.local/share/nvim/site/pack/packer/start/mason-lspconfig.nvim",
@@ -153,6 +163,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/ekassinghchhabra/.local/share/nvim/site/pack/packer/start/mason.nvim",
     url = "https://github.com/williamboman/mason.nvim"
+  },
+  ["neovim-ayu"] = {
+    loaded = true,
+    path = "/Users/ekassinghchhabra/.local/share/nvim/site/pack/packer/start/neovim-ayu",
+    url = "https://github.com/Shatur/neovim-ayu"
   },
   ["nvim-cmp"] = {
     loaded = true,
