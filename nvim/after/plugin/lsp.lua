@@ -1,5 +1,11 @@
 local lsp = require("lsp-zero")
-local tw_highlight = require('tailwind-highlight')
+local lspconfig = require("lspconfig")
+local diagnosticls = require("diagnosticls-configs")
+
+local omnisharp_bin = "/usr/local/bin/omnisharp-roselyn/OmniSharp"
+local pid = vim.fn.getpid()
+
+--local psalm_bin = "~/.composer/vendor/bin/psalm"
 
 lsp.preset("recommended")
 
@@ -25,18 +31,21 @@ lsp.set_preferences({
 	sign_icons = {}
 })
 
-require('lspconfig').tailwindcss.setup({
+-- Tailwind CSS
+local tw_highlight = require('tailwind-highlight')
+lspconfig.tailwindcss.setup({
 	on_attach = function(client, bufnr)
-		-- rest of your config
 		tw_highlight.setup(client, bufnr, {
 			single_column = false,
-			mode = 'background',
+			mode = "background",
 			debounce = 200,
 		})
-	end
+	end,
 })
 
-require('lspconfig').clangd.setup({
+
+-- C
+lspconfig.clangd.setup({
 	cmd = { "clangd", "--background-index" },
 	filetype = { "c", "cpp", "h" },
 	init_options = {
@@ -58,21 +67,53 @@ require('lspconfig').clangd.setup({
 	},
 })
 
+
+lspconfig.omnisharp.setup({
+	cmd = { omnisharp_bin, "--languageserver", "--hostPID", tostring(pid) }
+})
+
+lsp.configure('intelephense', {
+	settings = {
+		intelephense = {
+			telemetry = {
+				enabled = false,
+			},
+		}
+	}
+})
+
+
 lsp.on_attach(function(client, bufnr)
 	local opts = { buffer = bufnr, remap = false }
 
-	vim.keymap.set('n', "gd", function() vim.lsp.buf.definition() end, opts)
-	vim.keymap.set('n', "K", function() vim.lsp.buf.hover() end, opts)
-	vim.keymap.set('n', "<leader>vws", function() vim.lsp.buf.workspace_symbol() end, opts)
-	vim.keymap.set('n', "<leader>vd", function() vim.diagnostic.open_float() end, opts)
-	vim.keymap.set('n', "[d", function() vim.diagnostic.goto_next() end, opts)
-	vim.keymap.set('n', "]d", function() vim.diagnostic.goto_prev() end, opts)
-	vim.keymap.set('n', "<leader>vca", function() vim.lsp.buf.code_action() end, opts)
-	vim.keymap.set('n', "<leader>vrr", function() vim.lsp.buf.references() end, opts)
-	vim.keymap.set('n', "<leader>vrn", function() vim.lsp.buf.rename() end, opts)
-	vim.keymap.set('i', "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
+	vim.keymap.set('n', "gd", vim.lsp.buf.definition, { desc = "Go to definition [LSP]", buffer = bufnr })
+	vim.keymap.set('n', "gt", vim.lsp.buf.type_definition, { desc = "Go to type definition [LSP]", buffer = bufnr })
+	vim.keymap.set('n', "K", vim.lsp.buf.hover, { desc = "Show stuff on hover", buffer = bufnr })
+	vim.keymap.set('n', "<leader>vws", vim.lsp.buf.workspace_symbol,
+		{ desc = "Search workspace symbols [LSP]", buffer = bufnr })
+	vim.keymap.set('n', "<leader>vd", vim.diagnostic.open_float,
+		{ desc = "Show diagnostic at line [LSP]", buffer = bufnr })
+	vim.keymap.set('n', "[d", vim.diagnostic.goto_next, { desc = "Jump to next reference", buffer = bufnr })
+	vim.keymap.set('n', "]d", vim.diagnostic.goto_prev, { desc = "Jump to previous reference", buffer = bufnr })
+	vim.keymap.set('n', "<leader>vca", vim.lsp.buf.code_action, { desc = "Code action [LSP]", buffer = bufnr })
+	vim.keymap.set('n', "<leader>vrr", vim.lsp.buf.references, { desc = "Show references [LSP]", buffer = bufnr })
+	vim.keymap.set('n', "<leader>vrn", vim.lsp.buf.rename, { desc = "Rename [LSP]", buffer = bufnr })
+	vim.keymap.set('n', "<c-k>", vim.lsp.buf.signature_help, { desc = "Show signature help [LSP]", buffer = bufnr })
 end)
 
+-- diagnostics
+local web_configs = {
+	linter = require("diagnosticls-configs.linters.eslint_d"),
+	formatter = require("diagnosticls-configs.formatters.prettier"),
+}
 
-
+diagnosticls.setup({
+	javascript = web_configs,
+	javascriptreact = web_configs,
+	typescript = web_configs,
+	typescriptreact = web_configs,
+	lua = {
+		formatter = require("diagnosticls-configs.formatters.stylua"),
+	},
+})
 lsp.setup()

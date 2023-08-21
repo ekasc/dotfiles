@@ -2,36 +2,39 @@ return require('packer').startup(function(use)
 	-- Packer can manage itself
 	use 'wbthomason/packer.nvim'
 
+	use "tpope/vim-fugitive"
 	use {
 		'nvim-telescope/telescope.nvim', tag = '0.1.0',
 		-- or 				, branch = '0.1.x',
 		requires = { { 'nvim-lua/plenary.nvim' } }
 	}
-	--use 'navarasu/onedark.nvim'
-
-	--use "rebelot/kanagawa.nvim"
 	use "Shatur/neovim-ayu"
 
-	--use({
-	--	'rose-pine/neovim',
-	--	as = 'rose-pine',
-	--	config = function()
-	--		vim.cmd('colorscheme rose-pine')
-	--	end
-	--})
 	use { "catppuccin/nvim", as = "catppuccin" }
 	use "ekasc/kissland.nvim"
-	use('nvim-treesitter/nvim-treesitter', { run = ':TSUpdate' })
+	use{
+		"nvim-treesitter/nvim-treesitter",
+		requires = { "JoosepAlviste/nvim-ts-context-commentstring" },
+		run = function()
+			require("nvim-treesitter.install").update({ with_sync = true })()
+		end
+	}
 
-	use "fladson/vim-kitty"
-
+	--use "fladson/vim-kitty"
+	use {
+		'neovim/nvim-lspconfig',
+		requires = {
+			-- Linter/Formatter
+			"creativenull/diagnosticls-configs-nvim",
+			-- Tool installer
+			{ 'williamboman/mason.nvim' },
+			{ 'williamboman/mason-lspconfig.nvim' },
+		},
+	}
 	use {
 		'VonHeikemen/lsp-zero.nvim',
 		requires = {
 			-- LSP Support
-			{ 'neovim/nvim-lspconfig' },
-			{ 'williamboman/mason.nvim' },
-			{ 'williamboman/mason-lspconfig.nvim' },
 
 			-- Autocompletion
 			{ 'hrsh7th/nvim-cmp' },
@@ -61,4 +64,16 @@ return require('packer').startup(function(use)
 	use "princejoogie/tailwind-highlight.nvim"
 	use 'OmniSharp/Omnisharp-vim'
 	use 'rktjmp/lush.nvim'
+	--use 'phpactor/phpactor'
+	--use 'roobert/tailwindcss-colorizer-cmp.nvim'
+	--use "jose-elias-alvarez/null-ls.nvim"
+	use "tpope/vim-surround"
+	use {
+		"numToStr/Comment.nvim",
+		config = function()
+			require("Comment").setup({
+				pre_hook = require("ts_context_commentstring.integrations.comment_nvim").create_pre_hook(),
+			})
+		end,
+	}
 end)
