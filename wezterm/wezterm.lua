@@ -23,9 +23,18 @@ config.ssh_domains = {
 		name = 'ekasc-mac',
 		-- The hostname or address to connect to. Will be used to match settings
 		-- from your ssh config file
-		remote_address = '192.168.1.10',
+		remote_address = '192.168.1.16',
 		-- The username to use on the remote host
 		username = 'ekasc',
+	},
+	{
+		-- This name identifies the domain
+		name = 'ganeev-hp',
+		-- The hostname or address to connect to. Will be used to match settings
+		-- from your ssh config file
+		remote_address = '192.168.1.10',
+		-- The username to use on the remote host
+		username = 'ganeevkc',
 	},
 }
 

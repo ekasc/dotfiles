@@ -47,6 +47,7 @@ yabai -m config layout bsp \
 
 yabai -m rule --add app="^System Preferences$" sticky=on manage=off
 yabai -m rule --add app="^Stats$" sticky=on manage=off
+yabai -m rule --add app="^cl-native$" manage=off
 	  
 
 
