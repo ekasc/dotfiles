@@ -19,30 +19,38 @@ lsp.ensure_installed({
 })
 
 local cmp = require('cmp')
-local cmp_select = { behavior = cmp.SelectBehavior.Select }
-local cmp_mappings = lsp.defaults.cmp_mappings({
-	['<C-p'] = cmp.mapping.select_prev_item(cmp_select),
-	['<C-n'] = cmp.mapping.select_next_item(cmp_select),
-	['<C-y'] = cmp.mapping.confirm({ select = true }),
-	["<C-Space>"] = cmp.mapping.complete(),
+cmp.setup({
+	snippet = {
+		expand = function(args)
+			require('luasnip').lsp_expand(args.body)
+		end,
+	},
+	window = {
+		completion = cmp.config.window.bordered(),
+		documentation = cmp.config.window.bordered()
+	},
+	mapping = lsp.defaults.cmp_mappings({
+		['<C-p'] = cmp.mapping.scroll_docs(-1),
+		['<C-n'] = cmp.mapping.scroll_docs(1),
+		['<C-y'] = cmp.mapping.confirm({ select = true }),
+		["<C-Space>"] = cmp.mapping.complete(),
+	}),
+	formatting = {
+		format = require('lspkind').cmp_format({
+			mode = 'symbol',
+			maxwidth = 50,
+			ellipsis_char = '...',
+		})
+	},
+	sources = cmp.config.sources({
+		{ name = 'luasnip' },
+	})
 })
+
 
 lsp.set_preferences({
 	sign_icons = {}
 })
-
--- Tailwind CSS
-local tw_highlight = require('tailwind-highlight')
-lspconfig.tailwindcss.setup({
-	on_attach = function(client, bufnr)
-		tw_highlight.setup(client, bufnr, {
-			single_column = false,
-			mode = "background",
-			debounce = 200,
-		})
-	end,
-})
-
 
 -- C
 lspconfig.clangd.setup({
@@ -86,6 +94,7 @@ lsp.configure('intelephense', {
 lsp.on_attach(function(client, bufnr)
 	local opts = { buffer = bufnr, remap = false }
 
+
 	vim.keymap.set('n', "gd", vim.lsp.buf.definition, { desc = "Go to definition [LSP]", buffer = bufnr })
 	vim.keymap.set('n', "gt", vim.lsp.buf.type_definition, { desc = "Go to type definition [LSP]", buffer = bufnr })
 	vim.keymap.set('n', "K", vim.lsp.buf.hover, { desc = "Show stuff on hover", buffer = bufnr })
@@ -100,6 +109,8 @@ lsp.on_attach(function(client, bufnr)
 	vim.keymap.set('n', "<leader>vrn", vim.lsp.buf.rename, { desc = "Rename [LSP]", buffer = bufnr })
 	vim.keymap.set('n', "<c-k>", vim.lsp.buf.signature_help, { desc = "Show signature help [LSP]", buffer = bufnr })
 end)
+
+-- Tailwind CSS
 
 -- diagnostics
 local web_configs = {
