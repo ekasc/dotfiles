@@ -248,10 +248,10 @@ _G.packer_plugins = {
     path = "/Users/ekassinghchhabra/.local/share/nvim/site/pack/packer/start/vim-surround",
     url = "https://github.com/tpope/vim-surround"
   },
-  ["vim-svelte-plugin"] = {
+  ["vim-svelte"] = {
     loaded = true,
-    path = "/Users/ekassinghchhabra/.local/share/nvim/site/pack/packer/start/vim-svelte-plugin",
-    url = "https://github.com/leafOfTree/vim-svelte-plugin"
+    path = "/Users/ekassinghchhabra/.local/share/nvim/site/pack/packer/start/vim-svelte",
+    url = "https://github.com/evanleck/vim-svelte"
   }
 }
 

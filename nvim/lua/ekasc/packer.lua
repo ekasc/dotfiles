@@ -56,8 +56,8 @@ return require('packer').startup(function(use)
 	use 'ray-x/go.nvim'
 	use 'ray-x/guihua.lua' -- recommanded if need floating window support
 
-	--use 'evanleck/vim-svelte'
-	use "leafOfTree/vim-svelte-plugin"
+	use 'evanleck/vim-svelte'
+	-- use "leafOfTree/vim-svelte-plugin"
 	use 'nvim-lua/plenary.nvim' --" don't forget to add this one if you don't have it yet!
 	use 'ThePrimeagen/harpoon'
 	use 'OmniSharp/Omnisharp-vim'
