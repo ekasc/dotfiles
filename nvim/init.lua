@@ -1,1 +1,1 @@
-require("ekasc")
+require('ekasc')

@@ -1,3 +1,3 @@
-require("ekasc.remap")
-require("ekasc.set")
-require('go').setup()
+require('ekasc.keymap')
+require('ekasc.set')
+require('ekasc.lazy')
