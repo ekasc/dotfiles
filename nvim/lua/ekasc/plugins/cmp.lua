@@ -8,8 +8,12 @@ local M = {
 		{ 'hrsh7th/cmp-nvim-lua' },
 		{ 'onsails/lspkind.nvim' },
 		-- Snippets
-		{ 'L3MON4D3/LuaSnip' },
-		{ 'rafamadriz/friendly-snippets' },
+		{
+			'L3MON4D3/LuaSnip',
+			dependencies = {
+				{ 'rafamadriz/friendly-snippets' },
+			},
+		},
 	}
 
 }
@@ -56,11 +60,10 @@ function M.config()
 			completion = cmp.config.window.bordered(),
 			documentation = cmp.config.window.bordered()
 		},
-		mapping = require('lsp-zero').defaults.cmp_mappings({
-			['<C-p'] = cmp.mapping.select_prev_item(),
-			['<C-n'] = cmp.mapping.select_next_item(),
-			['<C-y'] = cmp.mapping.confirm({ select = true }),
-			["<CR>"] = cmp.mapping.confirm(),
+		mapping = cmp.mapping.preset.insert({
+			['<C-p'] = cmp.mapping.scroll_docs(-1),
+			['<C-n'] = cmp.mapping.scroll_docs(1),
+			['<CR>'] = cmp.mapping.confirm({ select = true }),
 		}),
 		formatting = {
 			fields = { 'kind', 'abbr', 'menu' },
@@ -76,21 +79,39 @@ function M.config()
 				return vim_item
 			end,
 		},
-		sources = {
-			{ name = 'nvim_lua' },
+		sources = cmp.config.sources({
 			{ name = 'nvim_lsp' },
 			{ name = 'luasnip' },
 			{ name = 'buffer' },
 			{ name = 'path' },
-		},
+		}),
+		['<Tab>'] = cmp.mapping(function(fallback)
+			if cmp.visible() then
+				cmp.select_next_item()
+			elseif luasnip.expand_or_jumpable() then
+				luasnip.expand_or_jump()
+			else
+				fallback()
+			end
+		end, { 'i', 's' }),
+		['<S-Tab>'] = cmp.mapping(function(fallback)
+			if cmp.visible() then
+				cmp.select_prev_item()
+			elseif luasnip.jumpable(-1) then
+				luasnip.jump(-1)
+			else
+				fallback()
+			end
+		end, { 'i', 's' }),
 		confirm_opts = {
 			behavior = cmp.ConfirmBehavior.Replace,
-			select = false,
+			select = true,
 		},
 		experimental = {
 			ghost_text = false,
 		}
 	})
+	require('luasnip/loaders/from_vscode').lazy_load()
 	cmp.setup.cmdline('/', {
 		mapping = cmp.mapping.preset.cmdline(),
 		sources = {
@@ -99,10 +120,11 @@ function M.config()
 	})
 
 	-- `:` cmdline setup.
-	cmp.setup.cmdline(':', {
+	--[[ cmp.setup.cmdline(':', {
 		mapping = cmp.mapping.preset.cmdline(),
 		sources = cmp.config.sources({
-			{ name = 'path' }
+			{ name = 'path' },
+			{ name = 'buffer' }
 		}, {
 			{
 				name = 'cmdline',
@@ -111,7 +133,7 @@ function M.config()
 				}
 			}
 		})
-	})
+	}) ]]
 end
 
 return M

@@ -9,6 +9,7 @@ alt - return : /Applications/WezTerm.app/Contents/MacOS/wezterm
 # alt - b : /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome
 alt - b : /Applications/Brave\ Browser.app/Contents/MacOS/Brave\ Browser
 # alt - b : /Applications/Firefox.app/Contents/MacOS/Firefox
+alt - f : open /System/Library/CoreServices/Finder.app
 
 alt - q : yabai -m window --close
 
