@@ -232,6 +232,10 @@ function M.config()
 		linter = require("diagnosticls-configs.linters.eslint_d"),
 		formatter = require("diagnosticls-configs.formatters.prettier"),
 	}
+	local gopls_config = {
+		linter = require("diagnosticls-configs.linters.golangci_lint"),
+		formatter = require("diagnosticls-configs.formatters.gofumpt"),
+	}
 
 	diagnosticls.setup({
 		javascript = web_configs,
@@ -239,6 +243,7 @@ function M.config()
 		typescript = web_configs,
 		typescriptreact = web_configs,
 		svelte = web_configs,
+		go = gopls_config,
 		lua = {
 			formatter = require("diagnosticls-configs.formatters.stylua"),
 		},
