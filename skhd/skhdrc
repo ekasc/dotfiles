@@ -1,5 +1,5 @@
 # restart services
-shift + alt - r : yabai --restart-service && skhd --reload
+shift + alt - r : yabai --restart-service && skhd --reload && sketchybar --reload
 
 # terminal
 #alt - return : /Applications/Alacritty.app/Contents/MacOS/alacritty
@@ -11,17 +11,18 @@ alt - b : /Applications/Brave\ Browser.app/Contents/MacOS/Brave\ Browser
 # alt - b : /Applications/Firefox.app/Contents/MacOS/Firefox
 alt - f : open /System/Library/CoreServices/Finder.app
 
-alt - q : yabai -m window --close
+shift + alt - q : yabai -m window --close
 
 # toggle fullscreen with gaps
 #alt - f : yabai -m window --toggle zoom-fullscreen && ~/bin/toggle_alacritty_opacity
 shift + alt - f : yabai -m window --toggle native-fullscreen
-shift + alt - t : ~/bin/wezterm
+# shift + alt - t : ~/bin/wezterm
 
 # Rotate
 shift + alt - s : yabai -m space --rotate 90
 
 # toggle topmost (keep above other windows)
+
 alt - o : yabai -m window --toggle topmost
 
 # move window
@@ -99,4 +100,4 @@ alt - g : yabai -m space --toggle padding; yabai -m space --toggle gap
 shift + alt - 0 : yabai -m space --balance
 
 # fast focus desktop
-alt - 0 : yabai -m space --focus recent
+alt - space : yabai -m space --focus recent

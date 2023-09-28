@@ -4,10 +4,10 @@ vim.keymap.set('n', '<leader>,', vim.cmd.Ex)
 vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv")
 vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
 
-vim.keymap.set('n', 'Y', 'yg$')
-vim.keymap.set('n', 'J', 'mzJ`z')
 vim.keymap.set('n', '<C-i>', '<C-d>zz')
 vim.keymap.set('n', '<C-u>', '<C-u>zz')
+vim.keymap.set('n', 'Y', 'yg$')
+vim.keymap.set('n', 'J', 'mzJ`z')
 vim.keymap.set('n', 'N', 'Nzzzv')
 vim.keymap.set('n', 'n', 'nzzzv')
 
@@ -35,4 +35,4 @@ end) ]]
 vim.keymap.set('n', '<leader>s', ':%s/\\<<C-r><C-w>\\>/<C-r><C-w>/gI<Left><Left><Left>')
 
 -- GoImport
-vim.keymap.set('n', '<leader>l', '<cmd>GoImport<CR>')
+-- vim.keymap.set('n', '<leader>l', '<cmd>GoImport<CR>')

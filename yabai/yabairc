@@ -45,10 +45,12 @@ yabai -m config layout bsp \
 	  window_border_blur on \
 	  external_bar all:0:30
 
+yabai -m space 1 --label browser
 yabai -m rule --add app="^System Preferences$" sticky=on manage=off
 yabai -m rule --add app="^Stats$" sticky=on manage=off
-yabai -m rule --add app="^cl-native$" manage=off
-	  
+# S K E T C H Y B A R  E V E N T S
+yabai -m signal --add event=window_focused action="sketchybar -m --trigger window_focus &> /dev/null"
+yabai -m signal --add event=window_title_changed action="sketchybar -m --trigger title_change &> /dev/null"
 
 
 

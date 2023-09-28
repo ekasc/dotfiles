@@ -1,15 +1,18 @@
-#!/usr/bin/env sh
-
-sketchybar --add item clock right \
-	--set clock update_freq=1 \
-	icon.padding_left=10 \
-	icon.color="$BLACK" \
-	label.color=$BLACK \
-	label.padding_right=5 \
-	label.width=78 \
-	align=center \
-	script="$PLUGIN_DIR/clock.sh" \
-	background.height=26 \
-	background.color=$MAGENTA \
-	background.corner_radius=$CORNER_RADIUS \
-	background.padding_right=2
+sketchybar -m \
+	--add item date center \
+	--set date update_freq=60 \
+	background.color=$BACKGROUND \
+	background.height=30 \
+	label.color=$WHITE \
+	icon.padding_right=10 \
+	label.font.style="Regular"\
+	label.padding_right=10 \
+	script="~/.config/sketchybar/plugins/date.sh" \
+	--add item time center\
+	--set time update_freq=2 \
+	icon.padding_right=0 \
+	background.height=30 \
+	label.padding_left=10 \
+	label.padding_right=10 \
+	background.color=$BACKGROUND \
+	script="~/.config/sketchybar/plugins/time.sh" \

@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 
+source "$HOME/.config/sketchybar/colors.sh"
 SPOTIFY_EVENT="com.spotify.client.PlaybackStateChanged"
 POPUP_SCRIPT="sketchybar -m --set spotify.anchor popup.drawing=toggle"
+PLUGIN_DIR="$HOME/.config/sketchybar/plugins"
 
 sketchybar --add event spotify_change $SPOTIFY_EVENT \
-    --add item spotify.anchor right \
+    --add item spotify.anchor center \
     --set spotify.anchor script="$PLUGIN_DIR/spotify.sh" \
     click_script="$POPUP_SCRIPT" \
     popup.horizontal=on \

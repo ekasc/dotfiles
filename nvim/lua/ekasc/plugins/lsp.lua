@@ -10,12 +10,23 @@ local M = {
 		{ "folke/neodev.nvim" },
 		{ "princejoogie/tailwind-highlight.nvim" },
 		{ "WhoIsSethDaniel/mason-tool-installer.nvim" },
+		{ "yuchanns/phpfmt.nvim" },
+		{
+			"phpactor/phpactor",
+			ft = "php",
+			version = "*",
+			build = "composer install --no-dev -o",
+		},
 	},
 }
 
 function M.config()
 	require("neodev").setup()
-	require("mason").setup()
+	require("mason").setup({
+		ui = {
+			border = "rounded"
+		},
+	})
 	local lspconfig = require("lspconfig")
 	local diagnosticls = require("diagnosticls-configs")
 	local format_group = vim.api.nvim_create_augroup("LspFormatGroup", {})
@@ -120,6 +131,10 @@ function M.config()
 				{ desc = "Organize imports [TS]", buffer = bufnr }
 			)
 		end
+
+		vim.keymap.set("n", "<leader>l", function()
+			require("phpfmt").formatting()
+		end, { desc = "PHP Code format [LSP]", buffer = bufnr })
 	end
 
 	local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -165,11 +180,17 @@ function M.config()
 	-- Language Servers
 	lspconfig.pyright.setup(default_config)
 	lspconfig.cssls.setup(default_config)
-	lspconfig.html.setup(default_config)
 	lspconfig.jsonls.setup(default_config)
 	lspconfig.yamlls.setup(default_config)
 	lspconfig.gopls.setup(default_config)
 	lspconfig.svelte.setup(default_config)
+	lspconfig.eslint.setup(default_config)
+	-- lspconfig.intelephense.setup(default_config)
+	lspconfig.html.setup({
+		on_attach = on_attach,
+		capabilities = capabilities,
+		filetypes = { "html", "php" },
+	})
 
 	-- Tailwind CSS
 	local tw_highlight = require("tailwind-highlight")
@@ -221,29 +242,106 @@ function M.config()
 		},
 	}))
 
+	-- PHP
+	lspconfig.phpactor.setup({
+		on_attach = on_attach,
+		capabilities = capabilities,
+		init_options = {
+			["php_code_sniffer.enabled"] = true,
+			-- ["language_server_php_cs_fixer.enabled"] = true,
+		},
+	})
+
+	require("phpfmt").setup({
+		-- Default configs
+		cmd = "phpcbf",
+		standard = "PSR12",
+		auto_format = false,
+	})
+
+	local fs = require("diagnosticls-configs.fs")
+	local php_format = require("diagnosticls-configs.formatters.php_cs_fixer")
+	php_format = vim.tbl_extend("force", php_format, {
+		sourceName = "php-cs-fixer_ext",
+		command = fs.executable("php-cs-fixer", fs.Scope.COMPOSER),
+		args = {
+			"--rules=@PSR12",
+			"--using-cache=no",
+			"--no-interaction",
+			-- "--dry-run",
+			"fix",
+			"-",
+		},
+		isStdout = false,
+		isStdin = true,
+		doesWriteToFile = true,
+		ignoreExitCode = true,
+		rootPatterns = { "composer.json" },
+	})
+
+	local php_lint = require("diagnosticls-configs.linters.phpcs")
+	php_lint = vim.tbl_extend("force", php_lint, {
+		sourceName = "phpcs_ext",
+		command = fs.executable("phpcs", fs.Scope.COMPOSER),
+		debounce = 100,
+		args = {
+			"--standard=PSR12",
+			"--report=emacs",
+			"-l",
+		},
+		offsetLine = 0,
+		offsetColumn = 0,
+		formatLines = 1,
+		formatPattern = {
+			[[^.*:(\d+):(\d+):\s+(.*)\s+-\s+(.*)(\r|\n)*$]],
+			{ line = 1, column = 2, security = 3, message = { "[phpcs] ", 4 } },
+		},
+		securities = { error = "error", warning = "warning" },
+		rootPatterns = { ".git", "vendor", "composer.json" },
+	})
+
 	diagnosticls.init({
 		on_attach = function(_, bufnr)
 			register_fmt_keymap("diagnosticls", bufnr)
 			-- register_fmt_autosave("diagnosticls", bufnr)
 		end,
+		default_config = false,
 	})
 
-	local web_configs = {
+	local web_config = {
 		linter = require("diagnosticls-configs.linters.eslint_d"),
 		formatter = require("diagnosticls-configs.formatters.prettier"),
 	}
+
 	local gopls_config = {
 		linter = require("diagnosticls-configs.linters.golangci_lint"),
 		formatter = require("diagnosticls-configs.formatters.gofumpt"),
 	}
 
+	local html_config = {
+		-- linter = require("diagnosticls-configs.linters.stylelint"),
+		formatter = require("diagnosticls-configs.formatters.prettier"),
+	}
+	local css_config = {
+		linter = require("diagnosticls-configs.linters.stylelint"),
+		formatter = require("diagnosticls-configs.formatters.prettier"),
+	}
+
+	local php_config = {
+		-- linter = php_lint,
+		-- formatter = php_format,
+	}
+
 	diagnosticls.setup({
-		javascript = web_configs,
-		javascriptreact = web_configs,
-		typescript = web_configs,
-		typescriptreact = web_configs,
-		svelte = web_configs,
+		javascript = web_config,
+		javascriptreact = web_config,
+		typescript = web_config,
+		typescriptreact = web_config,
+		svelte = web_config,
 		go = gopls_config,
+		html = html_config,
+		css = css_config,
+		php = php_config,
 		lua = {
 			formatter = require("diagnosticls-configs.formatters.stylua"),
 		},
