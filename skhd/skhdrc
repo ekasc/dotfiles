@@ -8,6 +8,7 @@ alt - return : /Applications/WezTerm.app/Contents/MacOS/wezterm
 # browser
 # alt - b : /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome
 alt - b : /Applications/Brave\ Browser.app/Contents/MacOS/Brave\ Browser
+alt - a : /Applications/Firefox\ Developer\ Edition.app/Contents/MacOS/firefox-bin 
 # alt - b : /Applications/Firefox.app/Contents/MacOS/Firefox
 alt - f : open /System/Library/CoreServices/Finder.app
 

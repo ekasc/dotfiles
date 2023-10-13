@@ -9,7 +9,7 @@ function M.config()
 
 	local colors = {
 		--bg       = cat.base,
-		fg       = cat.fuijWhite,
+		fg       = cat.text,
 		yellow   = cat.yellow,
 		cyan     = cat.sky,
 		darkblue = cat.sapphire,

@@ -17,6 +17,9 @@ local M = {
 			version = "*",
 			build = "composer install --no-dev -o",
 		},
+		-- {
+		-- 	"OmniSharp/omnisharp-vim",
+		-- },
 	},
 }
 
@@ -24,7 +27,7 @@ function M.config()
 	require("neodev").setup()
 	require("mason").setup({
 		ui = {
-			border = "rounded"
+			border = "rounded",
 		},
 	})
 	local lspconfig = require("lspconfig")
@@ -92,6 +95,13 @@ function M.config()
 
 	vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
 		border = "rounded",
+	})
+
+	vim.diagnostic.config({
+		float = {
+			border = "rounded",
+			source = "always",
+		},
 	})
 
 	local function on_attach(client, bufnr)
@@ -180,12 +190,76 @@ function M.config()
 	-- Language Servers
 	lspconfig.pyright.setup(default_config)
 	lspconfig.cssls.setup(default_config)
-	lspconfig.jsonls.setup(default_config)
 	lspconfig.yamlls.setup(default_config)
 	lspconfig.gopls.setup(default_config)
 	lspconfig.svelte.setup(default_config)
 	lspconfig.eslint.setup(default_config)
-	-- lspconfig.intelephense.setup(default_config)
+
+	lspconfig.jsonls.setup({
+		on_attach = function(client, bufnr)
+			register_fmt_keymap("jsonls", bufnr)
+			on_attach(client, bufnr)
+		end,
+		capabilities = capabilities,
+	})
+	lspconfig.jdtls.setup({
+		on_attach = function(client, bufnr)
+			register_fmt_keymap("jdtls", bufnr)
+			on_attach(client, bufnr)
+		end,
+		capabilities = capabilities,
+	})
+
+	-- csharp
+	lspconfig.omnisharp.setup({
+		-- cmd = { "dotnet", "~/.local/share/nvim/mason/packages/omnisharp/libexec/OmniSharp.dll" },
+
+		-- Enables support for reading code style, naming convention and analyzer
+		-- settings from .editorconfig.
+		enable_editorconfig_support = true,
+
+		-- If true, MSBuild project system will only load projects for files that
+		-- were opened in the editor. This setting is useful for big C# codebases
+		-- and allows for faster initialization of code navigation features only
+		-- for projects that are relevant to code that is being edited. With this
+		-- setting enabled OmniSharp may load fewer projects and may thus display
+		-- incomplete reference lists for symbols.
+		enable_ms_build_load_projects_on_demand = false,
+
+		-- Enables support for roslyn analyzers, code fixes and rulesets.
+		enable_roslyn_analyzers = true,
+
+		-- Specifies whether 'using' directives should be grouped and sorted during
+		-- document formatting.
+		organize_imports_on_format = true,
+
+		-- Enables support for showing unimported types and unimported extension
+		-- methods in completion lists. When committed, the appropriate using
+		-- directive will be added at the top of the current file. This option can
+		-- have a negative impact on initial completion responsiveness,
+		-- particularly for the first few completion sessions after opening a
+		-- solution.
+		enable_import_completion = true,
+
+		-- Specifies whether to include preview versions of the .NET SDK when
+		-- determining which version to use for project loading.
+		sdk_include_prereleases = true,
+
+		-- Only run analyzers against open files when 'enableRoslynAnalyzers' is
+		-- true
+		analyze_open_documents_only = false,
+
+		on_attach = function(client, bufnr)
+			register_fmt_keymap("omnisharp", bufnr)
+			on_attach(client, bufnr)
+		end,
+		capabilities = capabilities,
+	})
+
+	-- lspconfig.omnisharp_mono.setup(default_config)
+
+	-- lspconfig.csharp_ls.setup(default_config)
+
 	lspconfig.html.setup({
 		on_attach = on_attach,
 		capabilities = capabilities,
@@ -204,6 +278,8 @@ function M.config()
 
 			on_attach(client, bufnr)
 		end,
+
+		filetypes = { "javascriptreact", "typescriptreact", "php", "html", "svelte", "css" },
 	})
 
 	-- Typescript/JavaScript
@@ -309,7 +385,7 @@ function M.config()
 	})
 
 	local web_config = {
-		linter = require("diagnosticls-configs.linters.eslint_d"),
+		-- linter = require("diagnosticls-configs.linters.eslint_d"),
 		formatter = require("diagnosticls-configs.formatters.prettier"),
 	}
 

@@ -1,3 +1,4 @@
+---@diagnostic disable: missing-fields
 local M = {
 	"hrsh7th/nvim-cmp",
 	dependencies = {
@@ -47,6 +48,7 @@ function M.config()
 		Event = "",
 		Operator = "",
 		TypeParameter = "󰉺",
+		Codeium = "",
 	}
 
 	cmp.setup({
@@ -99,6 +101,7 @@ function M.config()
 					luasnip = "[Snippet]",
 					buffer = "[Buffer]",
 					path = "[Path]",
+					codeium = "[AI]",
 				})[entry.source.name]
 				return vim_item
 			end,
@@ -108,6 +111,7 @@ function M.config()
 			{ name = "luasnip" },
 			{ name = "buffer" },
 			{ name = "path" },
+			{ name = "codeium" },
 		}),
 		confirm_opts = {
 			behavior = cmp.ConfirmBehavior.Replace,
