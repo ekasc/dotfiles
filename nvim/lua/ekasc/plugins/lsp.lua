@@ -87,6 +87,10 @@ function M.config()
 		underline = { severity_limit = "Error" },
 		signs = true,
 		update_in_insert = false,
+		float = {
+			border = "rounded",
+			source = "always",
+		},
 	})
 
 	vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
@@ -95,13 +99,6 @@ function M.config()
 
 	vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
 		border = "rounded",
-	})
-
-	vim.diagnostic.config({
-		float = {
-			border = "rounded",
-			source = "always",
-		},
 	})
 
 	local function on_attach(client, bufnr)
@@ -178,7 +175,6 @@ function M.config()
 			"gopls",
 			"html",
 			"jsonls",
-			"pyright",
 			"lua_ls",
 			"tailwindcss",
 			"tsserver",
@@ -188,7 +184,7 @@ function M.config()
 	})
 
 	-- Language Servers
-	lspconfig.pyright.setup(default_config)
+	lspconfig.pylyzer.setup(default_config)
 	lspconfig.cssls.setup(default_config)
 	lspconfig.yamlls.setup(default_config)
 	lspconfig.gopls.setup(default_config)
@@ -211,7 +207,7 @@ function M.config()
 	})
 
 	-- csharp
-	lspconfig.omnisharp.setup({
+	--[[ lspconfig.omnisharp.setup({
 		-- cmd = { "dotnet", "~/.local/share/nvim/mason/packages/omnisharp/libexec/OmniSharp.dll" },
 
 		-- Enables support for reading code style, naming convention and analyzer
@@ -255,7 +251,7 @@ function M.config()
 		end,
 		capabilities = capabilities,
 	})
-
+]]
 	-- lspconfig.omnisharp_mono.setup(default_config)
 
 	-- lspconfig.csharp_ls.setup(default_config)
@@ -407,6 +403,10 @@ function M.config()
 		-- linter = php_lint,
 		-- formatter = php_format,
 	}
+	--[[ local python_config = {
+		linter = require("diagnosticls-configs.linters.mypy"),
+		formatter = require("diagnosticls-configs.formatters.autopep8"),
+	} ]]
 
 	diagnosticls.setup({
 		javascript = web_config,
@@ -418,6 +418,7 @@ function M.config()
 		html = html_config,
 		css = css_config,
 		php = php_config,
+		-- pyright = python_config,
 		lua = {
 			formatter = require("diagnosticls-configs.formatters.stylua"),
 		},

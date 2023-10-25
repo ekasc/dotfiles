@@ -1,7 +1,0 @@
-font:
-  builtin_box_drawing: false
-  size: 21.0
-
-window:
-  decorations: buttonless
-  opacity: 0.9
