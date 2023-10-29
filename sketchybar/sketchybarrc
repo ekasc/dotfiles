@@ -174,5 +174,3 @@ sketchybar --add item  ip_address right                              \
 # force all scripts to run the first time, it should never be run in an item script.
 
 sketchybar --update
-
-

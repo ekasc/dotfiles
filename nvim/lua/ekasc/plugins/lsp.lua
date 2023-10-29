@@ -187,10 +187,17 @@ function M.config()
 	lspconfig.pylyzer.setup(default_config)
 	lspconfig.cssls.setup(default_config)
 	lspconfig.yamlls.setup(default_config)
-	lspconfig.gopls.setup(default_config)
 	lspconfig.svelte.setup(default_config)
 	lspconfig.eslint.setup(default_config)
+	lspconfig.htmx.setup(default_config)
 
+	lspconfig.gopls.setup({
+		on_attach = function(client, bufnr)
+			register_fmt_keymap("gopls", bufnr)
+			on_attach(client, bufnr)
+		end,
+		capabilities = capabilities,
+	})
 	lspconfig.jsonls.setup({
 		on_attach = function(client, bufnr)
 			register_fmt_keymap("jsonls", bufnr)
@@ -414,7 +421,7 @@ function M.config()
 		typescript = web_config,
 		typescriptreact = web_config,
 		svelte = web_config,
-		go = gopls_config,
+		-- go = gopls_config,
 		html = html_config,
 		css = css_config,
 		php = php_config,

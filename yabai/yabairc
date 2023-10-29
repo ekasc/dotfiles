@@ -42,13 +42,15 @@ yabai -m config layout bsp \
 	  right_padding	0 \
 	  window_gap 6 \
 	  window_shadow off \
-	  window_border_blur on \
 	  external_bar all:0:30
+	  # window_border_blur on \
 
 yabai -m space 1 --label browser
+yabai -m space 2 --label terminal
 yabai -m rule --add app="^System Preferences$" sticky=off manage=off
 yabai -m rule --add app="^Stats$" sticky=on manage=off
-yabai -m rule -add app="^eqMac$" sticky=on manage=off
+yabai -m rule --add app="^eqMac$" sticky=on manage=off
+# yabai -m rule --add app="^Wezterm$" border=off
 
 # S K E T C H Y B A R  E V E N T S
 yabai -m signal --add event=window_focused action="sketchybar -m --trigger window_focus &> /dev/null"
