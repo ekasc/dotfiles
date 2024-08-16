@@ -17,9 +17,9 @@ local M = {
 			version = "*",
 			build = "composer install --no-dev -o",
 		},
-		-- {
-		-- 	"OmniSharp/omnisharp-vim",
-		-- },
+		{
+			"OmniSharp/omnisharp-vim",
+		},
 	},
 }
 
@@ -139,9 +139,14 @@ function M.config()
 			)
 		end
 
-		vim.keymap.set("n", "<leader>l", function()
+		if client.name == "gopls" then
+			-- GoImport
+			vim.keymap.set("n", "<leader>l", require("go.format").goimport)
+		end
+
+		--[[ vim.keymap.set("n", "<leader>l", function()
 			require("phpfmt").formatting()
-		end, { desc = "PHP Code format [LSP]", buffer = bufnr })
+		end, { desc = "PHP Code format [LSP]", buffer = bufnr }) ]]
 	end
 
 	local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -189,7 +194,15 @@ function M.config()
 	lspconfig.yamlls.setup(default_config)
 	lspconfig.svelte.setup(default_config)
 	lspconfig.eslint.setup(default_config)
-	lspconfig.htmx.setup(default_config)
+	-- lspconfig.htmx.setup(default_config)
+
+	lspconfig.rust_analyzer.setup({
+		on_attach = function(client, bufnr)
+			register_fmt_keymap("rust_analyzer", bufnr)
+			on_attach(client, bufnr)
+		end,
+		capabilities = capabilities,
+	})
 
 	lspconfig.gopls.setup({
 		on_attach = function(client, bufnr)
@@ -214,7 +227,7 @@ function M.config()
 	})
 
 	-- csharp
-	--[[ lspconfig.omnisharp.setup({
+	lspconfig.omnisharp.setup({
 		-- cmd = { "dotnet", "~/.local/share/nvim/mason/packages/omnisharp/libexec/OmniSharp.dll" },
 
 		-- Enables support for reading code style, naming convention and analyzer
@@ -258,7 +271,7 @@ function M.config()
 		end,
 		capabilities = capabilities,
 	})
-]]
+
 	-- lspconfig.omnisharp_mono.setup(default_config)
 
 	-- lspconfig.csharp_ls.setup(default_config)
