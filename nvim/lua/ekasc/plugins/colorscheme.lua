@@ -1,3 +1,83 @@
+local KanagawaTheme = {
+	"rebelot/kanagawa.nvim",
+
+	lazy = true,
+	config = function()
+		require("kanagawa").setup({
+			compile = true, -- enable compiling the colorscheme
+			undercurl = true, -- enable undercurls
+			commentStyle = { italic = true },
+			keywordStyle = { italic = true },
+			statementStyle = { bold = true },
+			transparent = true, -- do not set background color
+			dimInactive = false, -- dim inactive window `:h hl-NormalNC`
+			terminalColors = true, -- define vim.g.terminal_color_{0,17}
+			colors = { -- add/modify theme and palette colors
+				theme = {
+					wave = {
+						ui = {
+							bg = "none",
+						},
+					},
+					all = {
+						ui = {
+							bg_gutter = "none",
+						},
+					},
+				},
+			},
+			-- overrides = function(colors) -- add/modify highlights
+			-- 	return {}
+			-- end,
+			overrides = function(colors)
+				local theme = colors.theme
+				local makeDiagnosticColor = function(color)
+					local c = require("kanagawa.lib.color")
+					return { fg = color, bg = c(color):blend(theme.ui.bg, 0.95):to_hex() }
+				end
+				return {
+					NormalFloat = { bg = "none" },
+					FloatBorder = { bg = "none" },
+					FloatTitle = { bg = "none" },
+
+					-- Save an hlgroup with dark background and dimmed foreground
+					-- so that you can use it where your still want darker windows.
+					-- E.g.: autocmd TermOpen * setlocal winhighlight=Normal:NormalDark
+					NormalDark = { fg = theme.ui.fg_dim, bg = theme.ui.bg_m3 },
+
+					LazyNormal = { bg = theme.ui.bg_m3, fg = theme.ui.fg_dim },
+					MasonNormal = { bg = theme.ui.bg_m3, fg = theme.ui.fg_dim },
+					TelescopeTitle = { fg = theme.ui.special, bold = true },
+					TelescopePromptNormal = { bg = theme.ui.bg_p1 },
+					TelescopePromptBorder = { fg = theme.ui.bg_p1, bg = theme.ui.bg_p1 },
+					TelescopeResultsNormal = { fg = theme.ui.fg_dim, bg = theme.ui.bg_m1 },
+					TelescopeResultsBorder = { fg = theme.ui.bg_m1, bg = theme.ui.bg_m1 },
+					TelescopePreviewNormal = { bg = theme.ui.bg_dim },
+					TelescopePreviewBorder = { bg = theme.ui.bg_dim, fg = theme.ui.bg_dim },
+					Pmenu = { fg = theme.ui.shade0, bg = theme.ui.bg_p1 }, -- add `blend = vim.o.pumblend` to enable transparency
+					PmenuSel = { fg = "NONE", bg = theme.ui.bg_p2 },
+					PmenuSbar = { bg = theme.ui.bg_m1 },
+					PmenuThumb = { bg = theme.ui.bg_p2 },
+					DiagnosticVirtualTextHint = makeDiagnosticColor(theme.diag.hint),
+					DiagnosticVirtualTextInfo = makeDiagnosticColor(theme.diag.info),
+					DiagnosticVirtualTextWarn = makeDiagnosticColor(theme.diag.warning),
+					DiagnosticVirtualTextError = makeDiagnosticColor(theme.diag.error),
+				}
+			end,
+			-- theme = "wave", -- Load "wave" theme when 'background' option is not set
+			-- background = { -- map the value of 'background' option to a theme
+			-- 	dark = "dragon", -- try "dragon" !
+			-- 	light = "lotus",
+			-- },
+		})
+		vim.cmd.colorscheme("kanagawa")
+		vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+		vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+		vim.api.nvim_set_hl(0, "SignColumn", { bg = "none" })
+		vim.opt.fillchars = { eob = " " }
+	end,
+}
+
 local KisslandTheme = {
 	"ekasc/kissland.nvim",
 	lazy = true,
@@ -14,13 +94,24 @@ local KisslandTheme = {
 	end,
 }
 
+-- local UltraDark = {
+-- 	"cosmicthemethhead/ultradark.nvim",
+-- 	config = function()
+-- 		vim.cmd.colorscheme("ultradark")
+-- 		vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+-- 		vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+-- 		vim.api.nvim_set_hl(0, "SignColumn", { bg = "none" })
+-- 		vim.opt.fillchars = { eob = " " }
+-- 	end,
+-- }
+
 local CatppuccinTheme = {
 	"catppuccin/nvim",
 	name = "catppuccin",
-	-- lazy = true,
-	dependencies = {
-		"rktjmp/lush.nvim",
-	},
+	lazy = true,
+	-- dependencies = {
+	-- 	"rktjmp/lush.nvim",
+	-- },
 	priority = 1000,
 	config = function()
 		require("catppuccin").setup({
@@ -33,8 +124,32 @@ local CatppuccinTheme = {
 				loops = { "italic" },
 			},
 			integrations = {
-				telescope = { enabled = true, style = "nvchad" },
+				telescope = {
+					enabled = true,
+					--	style = "nvchad"
+				},
 				harpoon = true,
+				cmp = true,
+				native_lsp = {
+					enabled = true,
+					virtual_text = {
+						errors = { "italic" },
+						hints = { "italic" },
+						warnings = { "italic" },
+						information = { "italic" },
+						ok = { "italic" },
+					},
+					underlines = {
+						errors = { "underline" },
+						hints = { "underline" },
+						warnings = { "underline" },
+						information = { "underline" },
+						ok = { "underline" },
+					},
+					inlay_hints = {
+						background = true,
+					},
+				},
 			},
 			color_overrides = {
 				mocha = {
@@ -67,21 +182,7 @@ local CatppuccinTheme = {
 				},
 			},
 		})
-		vim.cmd.colorscheme("catppuccin")
-		--[[ vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
-		vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
-		vim.api.nvim_set_hl(0, "SignColumn", { bg = "none" }) ]]
-		vim.opt.fillchars = { eob = " " }
-	end,
-}
-
-local PopPunkTheme = {
-	"bignimbus/pop-punk.vim",
-	name = "punk",
-	lazy = true,
-	-- priority = 1000,
-	config = function()
-		-- vim.cmd.colorscheme("pop-punk")
+		-- vim.cmd.colorscheme("catppuccin")
 		vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
 		vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
 		vim.api.nvim_set_hl(0, "SignColumn", { bg = "none" })
@@ -89,46 +190,16 @@ local PopPunkTheme = {
 	end,
 }
 
-local EverBlush = {
-	"Everblush/nvim",
-	name = "everblush",
-	priority = 1000,
-	lazy = true,
-	config = function()
-		-- vim.cmd.colorscheme("everblush")
-		vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
-		vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
-		vim.api.nvim_set_hl(0, "SignColumn", { bg = "none" })
-		vim.opt.fillchars = { eob = " " }
-	end,
+local NightfoxTheme = {
+    "EdenEast/nightfox.nvim",
+    config = function()
+        require("nightfox").setup({
+            options = {
+                transparent = true,
+            },
+        })
+        vim.cmd.colorscheme("carbonfox")
+    end,
 }
 
-local Base16 = {
-	"RRethy/base16-nvim",
-	name = "base16",
-	priority = 1000,
-	lazy = true,
-	config = function()
-		vim.cmd.colorscheme("base16-windows-10")
-		vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
-		vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
-		vim.api.nvim_set_hl(0, "SignColumn", { bg = "none" })
-		vim.opt.fillchars = { eob = " " }
-	end,
-}
-
-local Leaf = {
-	"daschw/leaf.nvim",
-	name = "leaf",
-	priority = 1000,
-	lazy = true,
-	config = function()
-		vim.cmd.colorscheme("leaf")
-		vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
-		vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
-		vim.api.nvim_set_hl(0, "SignColumn", { bg = "none" })
-		vim.opt.fillchars = { eob = " " }
-	end
-}
-
-return { CatppuccinTheme, KisslandTheme, PopPunkTheme, EverBlush, Base16, Leaf }
+return { CatppuccinTheme, KisslandTheme, KanagawaTheme, NightfoxTheme }

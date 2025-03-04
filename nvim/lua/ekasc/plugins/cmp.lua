@@ -21,7 +21,6 @@ local M = {
 function M.config()
 	local cmp = require("cmp")
 	local luasnip = require("luasnip")
-
 	local kind_icons = {
 		Text = "󰊄",
 		Method = "m",
@@ -110,8 +109,8 @@ function M.config()
 			{ name = "nvim_lsp" },
 			{ name = "luasnip" },
 			{ name = "buffer" },
-			{ name = "path" },
 			{ name = "codeium" },
+			{ name = "path" },
 		}),
 		confirm_opts = {
 			behavior = cmp.ConfirmBehavior.Replace,
@@ -122,6 +121,8 @@ function M.config()
 		},
 	})
 	require("luasnip/loaders/from_vscode").lazy_load()
+	require("luasnip").filetype_extend("typescriptreact", { "html" })
+	require("luasnip").filetype_extend("astro", { "html" })
 	cmp.setup.cmdline("/", {
 		mapping = cmp.mapping.preset.cmdline(),
 		sources = {

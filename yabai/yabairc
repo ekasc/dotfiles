@@ -1,5 +1,7 @@
-yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
+#!/usr/bin/env sh
+
 sudo yabai --load-sa
+yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
 
 #yabai -m config layout bsp \
 #	  top_padding 0 \
@@ -36,25 +38,38 @@ sudo yabai --load-sa
 #
 
 yabai -m config layout bsp \
-	  top_padding 0 \
-	  bottom_padding 0 \
-	  left_padding 0 \
-	  right_padding	0 \
+	  top_padding 5 \
+	  bottom_padding 5 \
+	  left_padding 5 \
+	  right_padding	5 \
 	  window_gap 6 \
-	  window_shadow off \
-	  external_bar all:0:30
-	  # window_border_blur on \
+	  window_shadow float \
+	  auto_balance on \
+	  window_opacity off 
+
+
+
+
+	  # window_border off 
+	  # normal_window_border_color 0xD6B4FC
+	  # external_bar all:0:0
+	  # window_opacity on \
+	  # window_border off
 
 yabai -m space 1 --label browser
 yabai -m space 2 --label terminal
 yabai -m rule --add app="^System Preferences$" sticky=off manage=off
+yabai -m rule --add app="^System Settings$" sticky=off manage=off
 yabai -m rule --add app="^Stats$" sticky=on manage=off
 yabai -m rule --add app="^eqMac$" sticky=on manage=off
+yabai -m signal --add app='^Ghostty$' event=window_created action='yabai -m space --layout bsp'
+yabai -m signal --add app='^Ghostty$' event=window_destroyed action='yabai -m space --layout bsp'
+
 # yabai -m rule --add app="^Wezterm$" border=off
 
 # S K E T C H Y B A R  E V E N T S
-yabai -m signal --add event=window_focused action="sketchybar -m --trigger window_focus &> /dev/null"
-yabai -m signal --add event=window_title_changed action="sketchybar -m --trigger title_change &> /dev/null"
+# yabai -m signal --add event=window_focused action="sketchybar -m --trigger window_focus &> /dev/null"
+# yabai -m signal --add event=window_title_changed action="sketchybar -m --trigger title_change &> /dev/null"
 
 
 

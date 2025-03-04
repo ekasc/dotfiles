@@ -1,17 +1,22 @@
 # restart services
-shift + alt - r : sketchybar --reload && yabai --restart-service && skhd --reload
+# shift + alt - r : sketchybar --reload && yabai --restart-service && skhd --reload
+shift + alt - r : yabai --restart-service && skhd --reload
 
 # terminal
-#alt - return : /Applications/Alacritty.app/Contents/MacOS/alacritty
-alt - return : /Applications/WezTerm.app/Contents/MacOS/wezterm
+alt - return : open /Applications/Ghostty.app
+# alt - return : /Applications/Alacritty.app/Contents/MacOS/alacritty
+# alt - return : /Applications/WezTerm.app/Contents/MacOS/wezterm
+# alt - return : /Applications/Rio.app/Contents/MacOS/rio
 
 # browser
 # alt - b : /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome
 alt - b : /Applications/Brave\ Browser.app/Contents/MacOS/Brave\ Browser
-alt - a : /Applications/Firefox\ Developer\ Edition.app/Contents/MacOS/firefox-bin 
+# alt - a : /Applications/Firefox\ Developer\ Edition.app/Contents/MacOS/firefox-bin 
 # alt - b : /Applications/Firefox.app/Contents/MacOS/Firefox
 alt - f : open /System/Library/CoreServices/Finder.app
 
+alt - a : yabai -m space --create
+shift + alt - a : yabai -m space --destroy
 shift + alt - q : yabai -m window --close
 
 # toggle fullscreen with gaps

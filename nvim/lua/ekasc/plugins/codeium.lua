@@ -8,6 +8,7 @@ local M = {
 
 function M.config()
 	require("codeium").setup({})
+	vim.g.codeium_manual = true
 end
 
 return M
