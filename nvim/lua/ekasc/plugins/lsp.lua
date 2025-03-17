@@ -10,16 +10,7 @@ local M = {
 		{ "folke/neodev.nvim" },
 		{ "princejoogie/tailwind-highlight.nvim" },
 		{ "WhoIsSethDaniel/mason-tool-installer.nvim" },
-		--[[ { "yuchanns/phpfmt.nvim" },
-		{
-			"phpactor/phpactor",
-			ft = "php",
-			version = "*",
-			build = "composer install --no-dev -o",
-		}, ]]
-		{
-			"OmniSharp/omnisharp-vim",
-		},
+		{ "OmniSharp/omnisharp-vim" },
 		{ "Zeioth/garbage-day.nvim", event = "VeryLazy" },
 		{
 			"nvim-java/nvim-java",
@@ -28,7 +19,6 @@ local M = {
 				{ "nvim-java/nvim-java-core" },
 				{ "nvim-java/nvim-java-test" },
 				{ "nvim-java/nvim-java-dap" },
-				{ "nvim-java/nvim-java" },
 				{ "nvim-java/lua-async-await" },
 				{ "JavaHello/spring-boot.nvim" },
 				{ "mfussenegger/nvim-dap" },
@@ -38,6 +28,7 @@ local M = {
 }
 
 function M.config()
+	-- Setup for neodev and Mason
 	require("neodev").setup()
 	local registries = {
 		"github:nvim-java/mason-registry",
@@ -54,20 +45,15 @@ function M.config()
 			},
 		},
 	})
+
 	require("java").setup({
-		spring_boot_tools = {
-			enable = false,
-		},
-		java_test = {
-			enable = false,
-		},
-		java_debug_adapter = {
-			enable = false,
-		},
+		spring_boot_tools = { enable = false },
+		java_test = { enable = false },
+		java_debug_adapter = { enable = false },
 	})
+
 	local lspconfig = require("lspconfig")
 	local diagnosticls = require("diagnosticls-configs")
-	-- local format_group = vim.api.nvim_create_augroup("LspFormatGroup", {})
 	local format_opts = { async = false, timeout_ms = 2500 }
 
 	local function register_fmt_keymap(name, bufnr)
@@ -76,64 +62,55 @@ function M.config()
 		end, { desc = "Format current buffer [LSP]", buffer = bufnr })
 	end
 
-	-- Global diagnostic config
+	-- Global diagnostic settings
 	vim.diagnostic.config({
 		underline = { severity_limit = "Error" },
 		signs = true,
 		update_in_insert = false,
-		float = {
-			border = "rounded",
-			source = "always",
-		},
+		float = { border = "rounded", source = "if_many" },
 	})
 
-	vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-		border = "rounded",
-	})
+	-- LSP handlers with rounded borders
+	vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
+	vim.lsp.handlers["textDocument/signatureHelp"] =
+		vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" })
 
-	vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
-		border = "rounded",
-	})
-
+	-- on_attach: common key mappings for LSP buffers
 	local function on_attach(client, bufnr)
-		-- vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition [LSP]", buffer = bufnr })
-		vim.keymap.set("n", "gt", vim.lsp.buf.type_definition, { desc = "Go to type definition", buffer = bufnr })
-		vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { desc = "Go to declaration [LSP]", buffer = bufnr })
-		vim.keymap.set("n", "gi", vim.lsp.buf.implementation, { desc = "Go to implentation [LSP]", buffer = bufnr })
 		vim.keymap.set(
 			"n",
-			"gw",
-			vim.lsp.buf.document_symbol,
-			{ desc = "Search document symbols [LSP]", buffer = bufnr }
+			"gt",
+			Snacks.picker.lsp_type_definitions,
+			{ desc = "Go to type definition", buffer = bufnr }
 		)
+		vim.keymap.set("n", "gD", Snacks.picker.lsp_declarations, { desc = "Go to declaration [LSP]", buffer = bufnr })
+		vim.keymap.set(
+			"n",
+			"gi",
+			Snacks.picker.lsp_implementations,
+			{ desc = "Go to implementation [LSP]", buffer = bufnr }
+		)
+		vim.keymap.set("n", "gw", Snacks.picker.lsp_symbols, { desc = "Document symbols [LSP]", buffer = bufnr })
 		vim.keymap.set(
 			"n",
 			"gW",
-			vim.lsp.buf.workspace_symbol,
-			{ desc = "Search workspace symbols [LSP]", buffer = bufnr }
+			Snacks.picker.lsp_workspace_symbols,
+			{ desc = "Workspace symbols [LSP]", buffer = bufnr }
 		)
-		vim.keymap.set("n", "<leader>vrr", vim.lsp.buf.references, { desc = "Show references [LSP]", buffer = bufnr })
-		vim.keymap.set("n", "<c-k>", vim.lsp.buf.signature_help, { desc = "Show signature help [LSP]", buffer = bufnr })
-		vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Show stuff on hover", buffer = bufnr })
-		vim.keymap.set("n", "<leader>vca", vim.lsp.buf.code_action, { desc = "Code action [LSP]", buffer = bufnr })
-		vim.keymap.set("n", "<leader>vrn", vim.lsp.buf.rename, { desc = "Rename [LSP]", buffer = bufnr })
 		vim.keymap.set(
 			"n",
-			"<leader>vd",
-			vim.diagnostic.open_float,
-			{ desc = "Show diagnostic at line [LSP]", buffer = bufnr }
+			"<leader>vrr",
+			Snacks.picker.lsp_references,
+			{ desc = "Show references [LSP]", buffer = bufnr }
 		)
+		vim.keymap.set("n", "<c-k>", vim.lsp.buf.signature_help, { desc = "Signature help [LSP]", buffer = bufnr })
+		vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Hover info [LSP]", buffer = bufnr })
+		vim.keymap.set("n", "<leader>vca", vim.lsp.buf.code_action, { desc = "Code action [LSP]", buffer = bufnr })
+		vim.keymap.set("n", "<leader>vrn", vim.lsp.buf.rename, { desc = "Rename [LSP]", buffer = bufnr })
+		vim.keymap.set("n", "<leader>vd", vim.diagnostic.open_float, { desc = "Show diagnostic [LSP]", buffer = bufnr })
 
-		if client.name == "svelte" then
-			vim.keymap.set(
-				"n",
-				"<Leader>oi",
-				"<Cmd>OrganizeImports<CR>",
-				{ desc = "Organize imports [TS]", buffer = bufnr }
-			)
-		end
-
-		if client.name == "ts_ls" then
+		-- Map organize imports for both svelte and ts_ls
+		if client.name == "svelte" or client.name == "ts_ls" then
 			vim.keymap.set(
 				"n",
 				"<Leader>oi",
@@ -143,39 +120,31 @@ function M.config()
 		end
 
 		if client.name == "gopls" then
-			-- GoImport
-			vim.keymap.set("n", "<leader>l", require("go.format").goimport)
+			vim.keymap.set(
+				"n",
+				"<leader>l",
+				require("go.format").goimport,
+				{ desc = "Go import [GOPLS]", buffer = bufnr }
+			)
 		end
-
-		--[[ vim.keymap.set("n", "<leader>l", function()
-			require("phpfmt").formatting()
-		end, { desc = "PHP Code format [LSP]", buffer = bufnr }) ]]
 	end
 
+	-- LSP capabilities
 	local capabilities = vim.lsp.protocol.make_client_capabilities()
 	capabilities.textDocument.completion.completionItem.snippetSupport = true
 	capabilities.textDocument.completion.completionItem.preselectSupport = true
 	capabilities.textDocument.completion.completionItem.insertReplaceSupport = true
 	capabilities.textDocument.completion.completionItem.resolveSupport = {
-		properties = {
-			"documentation",
-			"detail",
-			"additionalTextEdits",
-		},
+		properties = { "documentation", "detail", "additionalTextEdits" },
 	}
 
-	local default_config = {
-		on_attach = on_attach,
-		capabilities = capabilities,
-	}
+	local default_config = { on_attach = on_attach, capabilities = capabilities }
 
+	-- Mason tool installer and lspconfig setup
 	require("mason-tool-installer").setup({
-		ensure_installed = {
-			"eslint_d",
-			"prettier",
-			"stylua",
-		},
+		ensure_installed = { "eslint_d", "prettier", "stylua" },
 	})
+
 	require("mason-lspconfig").setup({
 		ensure_installed = {
 			"cssls",
@@ -191,27 +160,18 @@ function M.config()
 		automatic_installation = true,
 	})
 
-	-- Language Servers
+	-- Setup language servers using default_config unless specific options are needed:
 	lspconfig.cssls.setup(default_config)
 	lspconfig.yamlls.setup(default_config)
-	-- lspconfig.svelte.setup(default_config)
 	lspconfig.eslint.setup(default_config)
-	-- lspconfig.astro.setup({
-	-- 	on_attach = function(client, bufnr)
-	-- 		register_fmt_keymap(client, bufnr)
-	-- 		on_attach(client, bufnr)
-	-- 	end,
-	-- 	capabilities = capabilities,
-	-- })
-	lspconfig.astro.setup({})
-	-- lspconfig.pylsp.setup(default_config)
+	lspconfig.astro.setup(default_config) -- now passing default_config for consistency
 	lspconfig.sqlls.setup({
 		on_attach = function(client, bufnr)
 			register_fmt_keymap("sqlfmt", bufnr)
 			on_attach(client, bufnr)
 		end,
 		capabilities = capabilities,
-		root_dir = function(_)
+		root_dir = function()
 			return vim.loop.cwd()
 		end,
 	})
@@ -229,9 +189,6 @@ function M.config()
 		end,
 		capabilities = capabilities,
 	})
-
-	-- lspconfig.htmx.setup(default_config)
-
 	lspconfig.svelte.setup({
 		on_attach = function(client, bufnr)
 			register_fmt_keymap("svelte", bufnr)
@@ -239,7 +196,6 @@ function M.config()
 		end,
 		capabilities = capabilities,
 	})
-
 	lspconfig.rust_analyzer.setup({
 		on_attach = function(client, bufnr)
 			register_fmt_keymap("rust_analyzer", bufnr)
@@ -247,7 +203,6 @@ function M.config()
 		end,
 		capabilities = capabilities,
 	})
-
 	lspconfig.gopls.setup({
 		on_attach = function(client, bufnr)
 			register_fmt_keymap("gopls", bufnr)
@@ -262,7 +217,6 @@ function M.config()
 		end,
 		capabilities = capabilities,
 	})
-	-- java
 	lspconfig.jdtls.setup({
 		on_attach = function(client, bufnr)
 			register_fmt_keymap("jdtls", bufnr)
@@ -270,7 +224,6 @@ function M.config()
 		end,
 		capabilities = capabilities,
 	})
-
 	lspconfig.clangd.setup({
 		on_attach = function(client, bufnr)
 			register_fmt_keymap("clangd", bufnr)
@@ -278,64 +231,14 @@ function M.config()
 		end,
 		capabilities = capabilities,
 	})
-
-	-- csharp
-	lspconfig.omnisharp.setup({
-		-- cmd = { "dotnet", "~/.local/share/nvim/mason/packages/omnisharp/libexec/OmniSharp.dll" },
-
-		-- Enables support for reading code style, naming convention and analyzer
-		-- settings from .editorconfig.
-		enable_editorconfig_support = true,
-
-		-- If true, MSBuild project system will only load projects for files that
-		-- were opened in the editor. This setting is useful for big C# codebases
-		-- and allows for faster initialization of code navigation features only
-		-- for projects that are relevant to code that is being edited. With this
-		-- setting enabled OmniSharp may load fewer projects and may thus display
-		-- incomplete reference lists for symbols.
-		enable_ms_build_load_projects_on_demand = false,
-
-		-- Enables support for roslyn analyzers, code fixes and rulesets.
-		enable_roslyn_analyzers = true,
-
-		-- Specifies whether 'using' directives should be grouped and sorted during
-		-- document formatting.
-		organize_imports_on_format = true,
-
-		-- Enables support for showing unimported types and unimported extension
-		-- methods in completion lists. When committed, the appropriate using
-		-- directive will be added at the top of the current file. This option can
-		-- have a negative impact on initial completion responsiveness,
-		-- particularly for the first few completion sessions after opening a
-		-- solution.
-		enable_import_completion = true,
-
-		-- Specifies whether to include preview versions of the .NET SDK when
-		-- determining which version to use for project loading.
-		sdk_include_prereleases = true,
-
-		-- Only run analyzers against open files when 'enableRoslynAnalyzers' is
-		-- true
-		analyze_open_documents_only = false,
-
-		on_attach = function(client, bufnr)
-			register_fmt_keymap("omnisharp", bufnr)
-			on_attach(client, bufnr)
-		end,
-		capabilities = capabilities,
-	})
-
-	-- lspconfig.omnisharp_mono.setup(default_config)
-
-	-- lspconfig.csharp_ls.setup(default_config)
-
+	lspconfig.ltex.setup(default_config)
 	lspconfig.html.setup({
 		on_attach = on_attach,
 		capabilities = capabilities,
 		filetypes = { "html", "php" },
 	})
 
-	-- Tailwind CSS
+	-- Tailwind CSS: enable tailwind highlighting and then call common on_attach
 	local tw_highlight = require("tailwind-highlight")
 	lspconfig.tailwindcss.setup({
 		on_attach = function(client, bufnr)
@@ -344,14 +247,12 @@ function M.config()
 				mode = "background",
 				debounce = 200,
 			})
-
 			on_attach(client, bufnr)
 		end,
-
 		filetypes = { "javascriptreact", "typescriptreact", "php", "html", "svelte", "css" },
 	})
 
-	-- Typescript/JavaScript
+	-- Typescript/JavaScript: organize imports command
 	local function organize_imports()
 		local params = {
 			command = "_typescript.organizeImports",
@@ -365,14 +266,11 @@ function M.config()
 		on_attach = on_attach,
 		capabilities = capabilities,
 		commands = {
-			OrganizeImports = {
-				organize_imports,
-				description = "Organize Imports",
-			},
+			OrganizeImports = { organize_imports, description = "Organize Imports" },
 		},
 	})
 
-	-- Lua
+	-- Lua: extend runtime path if needed and setup lua_ls with specific settings
 	local lua_rtp = vim.split(package.path, ";")
 	table.insert(lua_rtp, "lua/?.lua")
 	table.insert(lua_rtp, "lua/?/init.lua")
@@ -387,111 +285,31 @@ function M.config()
 		},
 	}))
 
-	-- PHP
-	--[[ lspconfig.phpactor.setup({
-		on_attach = on_attach,
-		capabilities = capabilities,
-		init_options = {
-			["php_code_sniffer.enabled"] = true,
-			-- ["language_server_php_cs_fixer.enabled"] = true,
-		},
-	}) ]]
-
-	--[[ require("phpfmt").setup({
-		-- Default configs
-		cmd = "phpcbf",
-		standard = "PSR12",
-		auto_format = false,
-	}) ]]
-
-	-- local fs = require("diagnosticls-configs.fs")
-	--[[ local php_format = require("diagnosticls-configs.formatters.php_cs_fixer")
-	php_format = vim.tbl_extend("force", php_format, {
-		sourceName = "php-cs-fixer_ext",
-		command = fs.executable("php-cs-fixer", fs.Scope.COMPOSER),
-		args = {
-			"--rules=@PSR12",
-			"--using-cache=no",
-			"--no-interaction",
-			-- "--dry-run",
-			"fix",
-			"-",
-		},
-		isStdout = false,
-		isStdin = true,
-		doesWriteToFile = true,
-		ignoreExitCode = true,
-		rootPatterns = { "composer.json" },
-	}) ]]
-
-	-- local php_lint = require("diagnosticls-configs.linters.phpcs")
-	-- php_lint = vim.tbl_extend("force", php_lint, {
-	-- 	sourceName = "phpcs_ext",
-	-- 	command = fs.executable("phpcs", fs.Scope.COMPOSER),
-	-- 	debounce = 100,
-	-- 	args = {
-	-- 		"--standard=PSR12",
-	-- 		"--report=emacs",
-	-- 		"-l",
-	-- 	},
-	-- 	offsetLine = 0,
-	-- 	offsetColumn = 0,
-	-- 	formatLines = 1,
-	-- 	formatPattern = {
-	-- 		[[^.*:(\d+):(\d+):\s+(.*)\s+-\s+(.*)(\r|\n)*$]],
-	-- 		{ line = 1, column = 2, security = 3, message = { "[phpcs] ", 4 } },
-	-- 	},
-	-- 	securities = { error = "error", warning = "warning" },
-	-- 	rootPatterns = { ".git", "vendor", "composer.json" },
-	-- })
-
+	-- Diagnosticls Setup
 	diagnosticls.init({
 		on_attach = function(_, bufnr)
 			register_fmt_keymap("diagnosticls", bufnr)
-			-- register_fmt_autosave("diagnosticls", bufnr)
 		end,
 		default_config = false,
 	})
-
 	local web_config = {
-		-- linter = require("diagnosticls-configs.linters.eslint_d"),
 		formatter = require("diagnosticls-configs.formatters.prettier"),
 	}
-
-	-- local gopls_config = {
-	-- 	linter = require("diagnosticls-configs.linters.golangci_lint"),
-	-- 	formatter = require("diagnosticls-configs.formatters.gofumpt"),
-	-- }
-
 	local html_config = {
-		-- linter = require("diagnosticls-configs.linters.stylelint"),
 		formatter = require("diagnosticls-configs.formatters.prettier"),
 	}
 	local css_config = {
 		linter = require("diagnosticls-configs.linters.stylelint"),
 		formatter = require("diagnosticls-configs.formatters.prettier"),
 	}
-
-	local php_config = {
-		-- linter = php_lint,
-		-- formatter = php_format,
-	}
-	local python_config = {
-		linter = require("diagnosticls-configs.linters.mypy"),
-		formatter = require("diagnosticls-configs.formatters.autopep8"),
-	}
-
 	diagnosticls.setup({
 		javascript = web_config,
 		javascriptreact = web_config,
 		typescript = web_config,
 		typescriptreact = web_config,
-		-- svelte = web_config,
-		-- go = gopls_config,
 		html = html_config,
 		css = css_config,
 		php = php_config,
-		-- python = python_config,
 		lua = {
 			formatter = require("diagnosticls-configs.formatters.stylua"),
 		},
