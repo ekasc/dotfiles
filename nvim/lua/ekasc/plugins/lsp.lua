@@ -2,7 +2,23 @@ local M = {
 	"neovim/nvim-lspconfig",
 	dependencies = {
 		-- Linter/Formatter
-		{ "creativenull/diagnosticls-configs-nvim" },
+		{
+			"stevearc/conform.nvim",
+			dependencies = {
+				"zapling/mason-conform.nvim",
+			},
+			event = { "BufWritePre" },
+			cmd = "ConformInfo",
+			keys = {
+				{
+					"<leader>f",
+					function()
+						require("conform").format({ async = true })
+					end,
+					mode = "",
+				},
+			},
+		},
 		-- Tool installer
 		{ "williamboman/mason.nvim" },
 		{ "williamboman/mason-lspconfig.nvim" },
@@ -53,14 +69,13 @@ function M.config()
 	})
 
 	local lspconfig = require("lspconfig")
-	local diagnosticls = require("diagnosticls-configs")
 	local format_opts = { async = false, timeout_ms = 2500 }
 
-	local function register_fmt_keymap(name, bufnr)
-		vim.keymap.set("n", "<leader>f", function()
-			vim.lsp.buf.format(vim.tbl_extend("force", format_opts, { name = name, bufnr = bufnr }))
-		end, { desc = "Format current buffer [LSP]", buffer = bufnr })
-	end
+	-- local function register_fmt_keymap(name, bufnr)
+	-- 	vim.keymap.set("n", "<leader>f", function()
+	-- 		vim.lsp.buf.format(vim.tbl_extend("force", format_opts, { name = name, bufnr = bufnr }))
+	-- 	end, { desc = "Format current buffer [LSP]", buffer = bufnr })
+	-- end
 
 	-- Global diagnostic settings
 	vim.diagnostic.config({
@@ -142,13 +157,12 @@ function M.config()
 
 	-- Mason tool installer and lspconfig setup
 	require("mason-tool-installer").setup({
-		ensure_installed = { "eslint_d", "prettier", "stylua" },
+		ensure_installed = { "prettier", "stylua" },
 	})
 
 	require("mason-lspconfig").setup({
 		ensure_installed = {
 			"cssls",
-			"diagnosticls",
 			"gopls",
 			"html",
 			"jsonls",
@@ -163,80 +177,23 @@ function M.config()
 	-- Setup language servers using default_config unless specific options are needed:
 	lspconfig.cssls.setup(default_config)
 	lspconfig.yamlls.setup(default_config)
-	lspconfig.eslint.setup(default_config)
-	lspconfig.astro.setup(default_config) -- now passing default_config for consistency
+	lspconfig.astro.setup(default_config)
+	lspconfig.pylsp.setup(default_config)
+	lspconfig.bashls.setup(default_config)
+	lspconfig.svelte.setup(default_config)
+	lspconfig.gopls.setup(default_config)
+	lspconfig.jsonls.setup(default_config)
+	lspconfig.jdtls.setup(default_config)
+	lspconfig.clangd.setup(default_config)
+	lspconfig.ltex.setup(default_config)
+	lspconfig.html.setup(default_config)
 	lspconfig.sqlls.setup({
-		on_attach = function(client, bufnr)
-			register_fmt_keymap("sqlfmt", bufnr)
-			on_attach(client, bufnr)
-		end,
-		capabilities = capabilities,
+		default_config,
 		root_dir = function()
 			return vim.loop.cwd()
 		end,
 	})
-	lspconfig.pylsp.setup({
-		on_attach = function(client, bufnr)
-			register_fmt_keymap("pylsp", bufnr)
-			on_attach(client, bufnr)
-		end,
-		capabilities = capabilities,
-	})
-	lspconfig.bashls.setup({
-		on_attach = function(client, bufnr)
-			register_fmt_keymap("bashls", bufnr)
-			on_attach(client, bufnr)
-		end,
-		capabilities = capabilities,
-	})
-	lspconfig.svelte.setup({
-		on_attach = function(client, bufnr)
-			register_fmt_keymap("svelte", bufnr)
-			on_attach(client, bufnr)
-		end,
-		capabilities = capabilities,
-	})
-	lspconfig.rust_analyzer.setup({
-		on_attach = function(client, bufnr)
-			register_fmt_keymap("rust_analyzer", bufnr)
-			on_attach(client, bufnr)
-		end,
-		capabilities = capabilities,
-	})
-	lspconfig.gopls.setup({
-		on_attach = function(client, bufnr)
-			register_fmt_keymap("gopls", bufnr)
-			on_attach(client, bufnr)
-		end,
-		capabilities = capabilities,
-	})
-	lspconfig.jsonls.setup({
-		on_attach = function(client, bufnr)
-			register_fmt_keymap("jsonls", bufnr)
-			on_attach(client, bufnr)
-		end,
-		capabilities = capabilities,
-	})
-	lspconfig.jdtls.setup({
-		on_attach = function(client, bufnr)
-			register_fmt_keymap("jdtls", bufnr)
-			on_attach(client, bufnr)
-		end,
-		capabilities = capabilities,
-	})
-	lspconfig.clangd.setup({
-		on_attach = function(client, bufnr)
-			register_fmt_keymap("clangd", bufnr)
-			on_attach(client, bufnr)
-		end,
-		capabilities = capabilities,
-	})
-	lspconfig.ltex.setup(default_config)
-	lspconfig.html.setup({
-		on_attach = on_attach,
-		capabilities = capabilities,
-		filetypes = { "html", "php" },
-	})
+	-- lspconfig.rust_analyzer.setup(default_config)
 
 	-- Tailwind CSS: enable tailwind highlighting and then call common on_attach
 	local tw_highlight = require("tailwind-highlight")
@@ -285,36 +242,37 @@ function M.config()
 		},
 	}))
 
-	-- Diagnosticls Setup
-	diagnosticls.init({
-		on_attach = function(_, bufnr)
-			register_fmt_keymap("diagnosticls", bufnr)
-		end,
-		default_config = false,
-	})
-	local web_config = {
-		formatter = require("diagnosticls-configs.formatters.prettier"),
-	}
-	local html_config = {
-		formatter = require("diagnosticls-configs.formatters.prettier"),
-	}
-	local css_config = {
-		linter = require("diagnosticls-configs.linters.stylelint"),
-		formatter = require("diagnosticls-configs.formatters.prettier"),
-	}
-	diagnosticls.setup({
-		javascript = web_config,
-		javascriptreact = web_config,
-		typescript = web_config,
-		typescriptreact = web_config,
-		html = html_config,
-		css = css_config,
-		php = php_config,
-		lua = {
-			formatter = require("diagnosticls-configs.formatters.stylua"),
+	-- Conform Setup
+	---@type conform.setupOpts
+	require("conform").setup({
+		formatters_by_ft = {
+			lua = { "stylua" },
+			javascript = { "prettierd", "prettier", stop_after_first = true },
+			typescript = { "prettierd", "prettier", stop_after_first = true },
+			javascriptreact = { "prettierd", "prettier", stop_after_first = true },
+			typescriptreact = { "prettierd", "prettier", stop_after_first = true },
+			css = { "stylelint", "prettierd", stop_after_first = true },
+			go = { "gofmt" },
+			json = { "fixjson" },
+			svelte = { "prettierd", "prettier", stop_after_first = true },
+			tailwindcss = { "rustywind", "prettierd", stop_after_first = true },
+			tex = { "tex-fmt" },
+			python = { "black" },
+			bash = { "shfmt" },
+			java = { "google-java-format" },
+			clangd = { "clang-format" },
+			html = { "prettierd", "prettier", stop_after_first = true },
+			-- php = { "php-cs-fixer" },
 		},
-		astro = web_config,
+		default_format_opts = { lsp_format = "fallback" },
+		log_level = vim.log.levels.ERROR,
+		-- Conform will notify you when a formatter errors
+		notify_on_error = true,
+		-- Conform will notify you when no formatters are available for the buffer
+		notify_no_formatters = true,
 	})
+
+	require("mason-conform").setup({})
 end
 
 return M
