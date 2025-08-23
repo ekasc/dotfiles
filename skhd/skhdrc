@@ -3,10 +3,11 @@
 shift + alt - r : yabai --restart-service && skhd --reload
 
 # terminal
-alt - return : open /Applications/Ghostty.app
-# alt - return : /Applications/Alacritty.app/Contents/MacOS/alacritty
+# alt - return : open /Applications/Ghostty.app
+alt - return : arch -arm64 /Applications/Alacritty.app/Contents/MacOS/alacritty
 # alt - return : /Applications/WezTerm.app/Contents/MacOS/wezterm
 # alt - return : /Applications/Rio.app/Contents/MacOS/rio
+# alt - return : /Applications/kitty.app/Contents/MacOS/kitty
 
 # browser
 # alt - b : /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome

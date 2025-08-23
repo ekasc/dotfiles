@@ -7,12 +7,14 @@ function module.apply_to_config(config)
 	config.color_scheme = "UltraDark"
 
 	config.font = wezterm.font({
-		family = "CommitMono",
+		family = "Miracode",
 	})
 	config.font_size = 19
 	config.adjust_window_size_when_changing_font_size = false
 	config.front_end = "WebGpu"
 	config.default_cursor_style = "SteadyBlock"
+
+	-- config.window_decorations = "MACOS_FORCE_SQUARE_CORNERS"
 
 	config.window_background_opacity = 0.75
 	-- config.macos_window_background_blur = 50

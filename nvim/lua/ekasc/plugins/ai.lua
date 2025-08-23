@@ -1,27 +1,34 @@
 local M = {
-	"Exafunction/codeium.nvim",
-	lazy = true,
-	dependencies = {
-		"nvim-lua/plenary.nvim",
-		"hrsh7th/nvim-cmp",
+	{
+		"Exafunction/codeium.nvim",
+		lazy = false,
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"hrsh7th/nvim-cmp",
+		},
+		config = function()
+			require("codeium").setup({})
+		end,
 	},
 	{
 		"zbirenbaum/copilot.lua",
+		lazy = true,
 		cmd = "Copilot",
 		event = "InsertEnter",
 		config = function()
-			require("copilot").setup({
-				suggestion = {
-					enabled = false,
-					panel = { enabled = false },
-				},
-			})
+			-- require("copilot").setup({
+			-- 	suggestion = {
+			-- 		enabled = false,
+			-- 		panel = { enabled = false },
+			-- 	},
+			-- })
 		end,
 	},
 	{
 		"zbirenbaum/copilot-cmp",
+		lazy = true,
 		config = function()
-			require("copilot_cmp").setup()
+			-- require("copilot_cmp").setup()
 		end,
 	},
 }

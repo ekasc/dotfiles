@@ -15,6 +15,9 @@ local M = {
 				{ "rafamadriz/friendly-snippets" },
 			},
 		},
+		{
+			"VonHeikemen/lsp-zero.nvim",
+		},
 	},
 }
 
@@ -51,13 +54,13 @@ function M.config()
 		Copilot = "",
 	}
 
-	local has_words_before = function()
-		if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then
-			return false
-		end
-		local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-		return col ~= 0 and vim.api.nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]:match("^%s*$") == nil
-	end
+	-- local has_words_before = function()
+	-- 	if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then
+	-- 		return false
+	-- 	end
+	-- 	local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+	-- 	return col ~= 0 and vim.api.nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]:match("^%s*$") == nil
+	-- end
 
 	cmp.setup({
 		snippet = {
@@ -87,43 +90,16 @@ function M.config()
 				cmp.config.compare.order,
 			},
 		},
-		mapping = require("lsp-zero").defaults.cmp_mappings({
-			["<C-p"] = cmp.mapping.select_prev_item(),
-			["<C-n"] = cmp.mapping.select_next_item(),
-			["<C-y"] = cmp.mapping.confirm({ select = true }),
+		mapping = {
+			["<C-p>"] = cmp.mapping.select_prev_item(),
+			["<C-n>"] = cmp.mapping.select_next_item(),
+			["<C-y>"] = cmp.mapping.confirm({ select = true }),
 			["<CR>"] = cmp.mapping.confirm({ select = true }),
-			["<Tab>"] = vim.schedule_wrap(function(fallback)
-				if cmp.visible() and has_words_before() then
-					cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
-				else
-					fallback()
-				end
-			end),
-			-- ["<Tab>"] = cmp.mapping(function(fallback)
-			-- 	if cmp.visible() then
-			-- 		cmp.select_next_item()
-			-- 	elseif luasnip.expandable() then
-			-- 		luasnip.expand()
-			-- 	else
-			-- 		fallback()
-			-- 	end
-			-- end, {
-			-- 	"i",
-			-- 	"s",
-			-- }),
-			-- ["<S-Tab>"] = cmp.mapping(function(fallback)
-			-- 	if cmp.visible() then
-			-- 		cmp.select_prev_item()
-			-- 	elseif luasnip.jumpable(-1) then
-			-- 		luasnip.jump(-1)
-			-- 	else
-			-- 		fallback()
-			-- 	end
-			-- end, {
-			-- 	"i",
-			-- 	"s",
-			-- }),
-		}),
+			["<Tab>"] = cmp.mapping(
+				cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false }),
+				{ "i" }
+			),
+		},
 		formatting = {
 			fields = { "kind", "abbr", "menu" },
 			format = function(entry, vim_item)
@@ -134,8 +110,8 @@ function M.config()
 					luasnip = "[Snippet]",
 					buffer = "[Buffer]",
 					path = "[Path]",
-					-- codeium = "[AI]",
-					copilot = "[AI]",
+					codeium = "[AI]",
+					-- copilot = "[AI]",
 				})[entry.source.name]
 				return vim_item
 			end,
@@ -143,8 +119,8 @@ function M.config()
 		sources = cmp.config.sources({
 			{ name = "nvim_lsp" },
 			{ name = "luasnip" },
-			-- { name = "codeium" },
-			{ name = "copilot" },
+			{ name = "codeium" },
+			-- { name = "copilot" },
 			{ name = "buffer" },
 			{ name = "path" },
 		}),
@@ -154,6 +130,11 @@ function M.config()
 		},
 		experimental = {
 			ghost_text = false,
+		},
+		performance = {
+			trigger_debounce_time = 500,
+			throttle_time = 550,
+			fetching_timeout = 80,
 		},
 	})
 	require("luasnip/loaders/from_vscode").lazy_load()

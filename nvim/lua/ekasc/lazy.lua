@@ -19,9 +19,9 @@ require("lazy").setup("ekasc.plugins", {
 		-- import your plugins
 		{ import = "plugins" },
 	},
-	install = {
-		colorscheme = { "kissland" },
-	},
+	-- install = {
+	-- 	colorscheme = { "kissland" },
+	-- },
 	ui = {
 		border = "rounded",
 	},

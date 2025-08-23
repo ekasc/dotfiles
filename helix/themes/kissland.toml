@@ -30,12 +30,11 @@
 "markup.link.text" = "yellow"
 "markup.link.label" = "green"
 "markup.quote" = "yellow"
-"diff.plus" =  "green"
+"diff.plus" = "green"
 "diff.minus" = "red"
 "diff.delta" = "yellow"
-
 # Interface
-"ui.background"= { bg = "" }
+"ui.background" = { bg = "" }
 "ui.cursor" = { fg = "dark_gray", bg = "yellow" }
 "ui.cursor.primary" = { fg = "dark_gray", bg = "orange" }
 "ui.cursor.match" = "orange"
@@ -62,21 +61,19 @@
 "error" = { fg = "red", modifiers = ["bold"] }
 "info" = { fg = "blue", modifiers = ["bold"] }
 "hint" = { fg = "blue", modifiers = ["bold"] }
-"diagnostic.hint" = { underline = { color = "blue", style="curl"} }
-"diagnostic.info"= { underline = { color = "blue", style="curl"} }
-"diagnostic.warning"= { underline = { color = "yellow", style="curl"} }
-"diagnostic.error"= { underline = { color = "red", style="curl"} }
+"diagnostic.hint" = { underline = { color = "blue", style = "curl" } }
+"diagnostic.info" = { underline = { color = "blue", style = "curl" } }
+"diagnostic.warning" = { underline = { color = "yellow", style = "curl" } }
+"diagnostic.error" = { underline = { color = "red", style = "curl" } }
 "ui.bufferline" = { fg = "gray", bg = "background" }
 "ui.bufferline.active" = { fg = "foreground", bg = "dark_gray" }
 "ui.debug" = { fg = "orange", bg = "background" }
 "ui.highlight.frameline" = { bg = "#0067a3" }
-
 "special" = "orange"
 
 [palette]
 background = "#0f1419"
 foreground = "#bfbdb6"
-
 black = "#131721"
 blue = "#59c2ff"
 dark_gray = "#2d3640"

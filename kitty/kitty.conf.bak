@@ -6,7 +6,7 @@
 #: individual font faces and even specify special fonts for particular
 #: characters.
 
-font_family      MesloLGS NF
+font_family		   Miracode
 # bold_font        auto
 # italic_font      auto
 # bold_italic_font auto
@@ -24,7 +24,7 @@ font_family      MesloLGS NF
 #:     italic_font      Operator Mono Book Italic
 #:     bold_italic_font Operator Mono Medium Italic
 
-font_size 21.0
+font_size 19.0
 
 #: Font size (in pts)
 
@@ -758,7 +758,7 @@ cursor_shape beam
 #: Fade the text in inactive windows by the specified amount (a number
 #: between zero and one, with zero being fully faded).
 
-# hide_window_decorations no
+hide_window_decorations yes
 
 #: Hide the window decorations (title-bar and window borders) with
 #: yes. On macOS, titlebar-only can be used to only hide the titlebar.
@@ -989,11 +989,11 @@ tab_powerline_style slanted
 #: Color scheme {{{
 
 # foreground #dddddd
-# background #000000
+background #000000
 
 #: The foreground and background colors.
 
-#background_opacity 0.4
+background_opacity 0.77
 
 #: The opacity of the background. A number between zero and one, where
 #: one is opaque and zero is fully transparent. This will only work if
@@ -1411,8 +1411,7 @@ tab_powerline_style slanted
 #: means to use the default system color, a value of background means
 #: to use the background color of the currently active window and
 #: finally you can use an arbitrary color, such as #12af59 or red.
-
-macos_titlebar_color dark
+# macos_titlebar_color dark
 
 #: The color of the kitty window's titlebar on macOS. A value of
 #: system means to use the default system color, light or dark can
@@ -2241,6 +2240,6 @@ map cmd+v       paste_from_clipboard
 
 
 # BEGIN_KITTY_THEME
-# Catppuccin-Frappe
-include current-theme.conf
+# Japanesque
+# include current-theme.conf
 # END_KITTY_THEME

@@ -6,7 +6,7 @@ local M = {
 	---@type snacks.Config
 	opts = {
 		explorer = { enabled = true, replace_netrw = true },
-		dashboard = { enabled = true, example = "startify" },
+		dashboard = { enabled = false, example = "startify" },
 		notifier = { enabled = true },
 		indent = { enabled = true },
 		git = { enabled = true },
@@ -62,7 +62,7 @@ local M = {
 			desc = "Find Git Files",
 		},
 		{
-			"<C-a>",
+			"<C-b>",
 			function()
 				Snacks.picker.commands()
 			end,

@@ -1,10 +1,10 @@
 command = /usr/local/bin/zsh --login --interactive
 background-opacity = 0.75
 background = 000000
-font-family = "Osaka"
-font-size = 20
+font-family = "Miracode"
+font-size = 19
 shell-integration-features = no-cursor,sudo,no-title
-macos-titlebar-style = transparent
+macos-titlebar-style = hidden
 theme = "nightfox"
 window-decoration = false
 mouse-hide-while-typing = true

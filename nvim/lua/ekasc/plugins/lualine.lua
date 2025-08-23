@@ -164,7 +164,7 @@ function M.config()
 		function()
 			local msg = "No Active Lsp"
 			local buf_ft = vim.api.nvim_buf_get_option(0, "filetype")
-			local clients = vim.lsp.get_active_clients()
+			local clients = vim.lsp.get_clients()
 			if next(clients) == nil then
 				return msg
 			end
@@ -182,11 +182,17 @@ function M.config()
 
 	-- Add components to right sections
 	ins_right({
-		"o:encoding", -- option component same as &encoding in viml
-		fmt = string.upper, -- I'm not sure why it's upper case either ;)
-		cond = conditions.hide_in_width,
-		color = { fg = colors.green, gui = "bold" },
+		require("noice").api.statusline.mode.get,
+		cond = require("noice").api.statusline.mode.has,
+		color = { fg = "#ff9e64" },
 	})
+
+	-- ins_right({
+	-- 	"o:encoding", -- option component same as &encoding in viml
+	-- 	fmt = string.upper, -- I'm not sure why it's upper case either ;)
+	-- 	cond = conditions.hide_in_width,
+	-- 	color = { fg = colors.green, gui = "bold" },
+	-- })
 
 	ins_right({
 		"fileformat",
