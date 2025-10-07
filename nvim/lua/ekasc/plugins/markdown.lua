@@ -1,8 +1,12 @@
-return {
-	"iamcco/markdown-preview.nvim",
-	cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
-	ft = { "markdown" },
-	build = function()
-		vim.fn["mkdp#util#install"]()
-	end,
+local M = {
+	"OXY2DEV/markview.nvim",
+	dependencies = {
+		"saghen/blink.cmp",
+	},
 }
+
+function M.config()
+	require("markview.highlights").setup()
+end
+
+return M

@@ -13,8 +13,8 @@ default-root-container-layout = "tiles"
 [mode.main.binding]
 # See: https://nikitabobko.github.io/AeroSpace/goodies#open-a-new-window-with-applescript
 alt-enter = "exec-and-forget arch -arm64 /Applications/Alacritty.app/Contents/MacOS/alacritty"
-# alt-b = "exec-and-forget /Applications/Brave\\ Browser.app/Contents/MacOS/Brave\\ Browser"
-alt-b = "exec-and-forget /Applications/Safari.app/Contents/MacOS/Safari"
+alt-b = "exec-and-forget /Applications/Brave\\ Browser.app/Contents/MacOS/Brave\\ Browser"
+# alt-b = "exec-and-forget /Applications/Safari.app/Contents/MacOS/Safari"
 # i3 wraps focus by default
 alt-j = "focus --boundaries-action wrap-around-the-workspace left"
 alt-k = "focus --boundaries-action wrap-around-the-workspace down"
@@ -80,6 +80,6 @@ outer.top = 0
 outer.right = 0
 
 [[on-window-detected]]
-if.app-id = 'org.alacritty'
+if.app-id = "org.alacritty"
 run = "layout tiling"
 

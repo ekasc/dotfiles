@@ -1,5 +1,6 @@
 local M = {
 	"neovim/nvim-lspconfig",
+	event = { "BufReadPre", "BufNewFile" },
 	dependencies = {
 		-- Linter/Formatter
 		{
@@ -30,6 +31,7 @@ local M = {
 		{ "Zeioth/garbage-day.nvim", event = "VeryLazy" },
 		{
 			"nvim-java/nvim-java",
+			ft = "java",
 			dependencies = {
 				{ "nvim-java/nvim-java-refactor" },
 				{ "nvim-java/nvim-java-core" },
@@ -99,6 +101,17 @@ function M.config()
 	---@diagnostic disable-next-line: undefined-doc-name
 	---@type conform.setupOpts
 	require("conform").setup({
+		formatters = {
+			["php-cs-fixer"] = {
+				command = "php-cs-fixer",
+				args = {
+					"fix",
+					"--rules=@PSR12", -- Formatting preset. Other presets are available, see the php-cs-fixer docs.
+					"$FILENAME",
+				},
+				stdin = false,
+			},
+		},
 		formatters_by_ft = {
 			lua = { "stylua" },
 			javascript = { "prettierd", "prettier", stop_after_first = true },

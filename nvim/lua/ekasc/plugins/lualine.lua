@@ -8,7 +8,7 @@ function M.config()
 	local cat = require("catppuccin.palettes").get_palette()
 
 	local colors = {
-		--bg       = cat.base,
+		-- bg       = cat.base,
 		fg = cat.text,
 		yellow = cat.yellow,
 		cyan = cat.sky,

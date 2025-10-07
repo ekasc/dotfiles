@@ -16,7 +16,7 @@ local M = {
 		arg = "leetcode.nvim",
 
 		---@type lc.lang
-		lang = "typescript",
+		lang = "golang",
 
 		cn = { -- leetcode.cn
 			enabled = false, ---@type boolean

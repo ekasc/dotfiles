@@ -17,6 +17,8 @@ local servers = {
 	"tailwindcss",
 	"lua_ls",
 	"tombi",
+	-- "intelephense",
+	"phpactor",
 }
 
 for _, server in ipairs(servers) do
