@@ -27,6 +27,14 @@ local M = {
 	},
 	keys = {
 		{
+			"<leader>i",
+			function()
+				Snacks.picker.highlights()
+			end,
+			desc = "Highlights",
+		},
+
+		{
 			"<leader>x",
 			function()
 				Snacks.picker.smart()

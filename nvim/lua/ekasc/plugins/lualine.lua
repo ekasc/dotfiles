@@ -1,24 +1,24 @@
 local M = {
 	"nvim-lualine/lualine.nvim",
+	enabled = true,
 }
 
 function M.config()
 	local lualine = require("lualine")
 
-	local cat = require("catppuccin.palettes").get_palette()
-
+	-- match darkvoid.nvim colors
 	local colors = {
-		-- bg       = cat.base,
-		fg = cat.text,
-		yellow = cat.yellow,
-		cyan = cat.sky,
-		darkblue = cat.sapphire,
-		green = cat.green,
-		orange = cat.red,
-		violet = cat.mauve,
-		magenta = cat.maroon,
-		blue = cat.blue,
-		red = cat.red,
+		-- bg = "#000000", -- transparent
+		fg = "#c0c0c0", -- default text
+		accent = "#8cf8f7",
+		cursor = "#bdfe58", -- lime
+		visual = "#303030", -- subtle dark gray
+		comment = "#585858", -- dim gray
+		error = "#dea6a0", -- soft red
+		warning = "#d6efd8", -- pale green
+		hint = "#bedc74", -- yellowish
+		info = "#7fa1c3", -- steel blue
+		inactive = "#3c3c3c", -- dim line
 	}
 
 	local conditions = {
@@ -35,40 +35,64 @@ function M.config()
 		end,
 	}
 
-	-- Config
+	local theme = {
+		normal = {
+			a = { fg = "#1c1c1c", bg = colors.accent, gui = "bold" },
+			b = { fg = colors.fg, bg = colors.visual },
+			c = { fg = colors.fg, bg = colors.bg },
+		},
+		insert = {
+			a = { fg = "#1c1c1c", bg = colors.cursor, gui = "bold" },
+			b = { fg = colors.fg, bg = colors.visual },
+			c = { fg = colors.fg, bg = colors.bg },
+		},
+		visual = {
+			a = { fg = "#1c1c1c", bg = colors.info, gui = "bold" },
+			b = { fg = colors.fg, bg = colors.visual },
+			c = { fg = colors.fg, bg = colors.bg },
+		},
+		replace = {
+			a = { fg = "#1c1c1c", bg = colors.error, gui = "bold" },
+			b = { fg = colors.fg, bg = colors.visual },
+			c = { fg = colors.fg, bg = colors.bg },
+		},
+		command = {
+			a = { fg = "#1c1c1c", bg = colors.hint, gui = "bold" },
+			b = { fg = colors.fg, bg = colors.visual },
+			c = { fg = colors.fg, bg = colors.bg },
+		},
+		inactive = {
+			a = { fg = colors.comment, bg = "none" },
+			b = { fg = colors.comment, bg = "none" },
+			c = { fg = colors.comment, bg = "none" },
+		},
+	}
+
 	local config = {
 		options = {
-			-- Disable sections and component separators
+			theme = "catppuccin",
+			-- theme = theme,
 			component_separators = "",
 			section_separators = "",
-			theme = {
-
-				--	-- We are going to use lualine_c an lualine_x as left and
-				--	-- right section. Both are highlighted by c theme .  So we
-				--	-- are just setting default looks o statusline
-				normal = { c = { fg = colors.fg, bg = colors.bg } },
-				inactive = { c = { fg = colors.fg, bg = colors.bg } },
-			},
-			-- theme = "kanagawa"
+			disabled_filetypes = {},
+			globalstatus = true,
+			always_divide_middle = true,
 		},
 		sections = {
-			-- these are to remove the defaults
 			lualine_a = {},
 			lualine_b = {},
-			lualine_y = {},
-			lualine_z = {},
-			-- These will be filled later
 			lualine_c = {},
 			lualine_x = {},
+			lualine_y = {},
+			lualine_z = {},
 		},
 		inactive_sections = {
-			-- these are to remove the defaults
 			lualine_a = {},
 			lualine_b = {},
-			lualine_y = {},
-			lualine_z = {},
 			lualine_c = {},
 			lualine_x = {},
+			lualine_y = {},
+			lualine_z = {},
 		},
 	}
 
@@ -86,7 +110,7 @@ function M.config()
 		function()
 			return "▊"
 		end,
-		color = { fg = colors.blue }, -- Sets highlighting of component
+		color = { fg = colors.accent }, -- Sets highlighting of component
 		padding = { left = 0, right = 1 }, -- We don't need space before this
 	})
 
@@ -98,71 +122,78 @@ function M.config()
 		color = function()
 			-- auto change color according to neovims mode
 			local mode_color = {
-				n = colors.red,
-				i = colors.green,
-				v = colors.blue,
-				[""] = colors.blue,
-				V = colors.blue,
-				c = colors.magenta,
-				no = colors.red,
-				s = colors.orange,
-				S = colors.orange,
-				[""] = colors.orange,
-				ic = colors.yellow,
-				R = colors.violet,
-				Rv = colors.violet,
-				cv = colors.red,
-				ce = colors.red,
-				r = colors.cyan,
-				rm = colors.cyan,
-				["r?"] = colors.cyan,
-				["!"] = colors.red,
-				t = colors.red,
+				n = colors.accent, -- normal: bright cyan glow
+				i = colors.cursor, -- insert: lime
+				v = colors.info, -- visual: steel blue
+				[""] = colors.info, -- visual block
+				V = colors.info, -- visual line
+				c = colors.warning, -- command: pale green
+				no = colors.accent,
+				s = colors.cursor, -- select
+				S = colors.cursor,
+				[""] = colors.cursor,
+				ic = colors.hint, -- insert completion
+				R = colors.error, -- replace: soft red
+				Rv = colors.error,
+				cv = colors.error, -- command-line mode
+				ce = colors.error,
+				r = colors.accent, -- prompt/confirm
+				rm = colors.accent,
+				["r?"] = colors.accent,
+				["!"] = colors.accent, -- shell or external cmd
+				t = colors.accent, -- terminal
 			}
+
 			return { fg = mode_color[vim.fn.mode()] }
 		end,
 		padding = { right = 1 },
 	})
 
+	-- Left sections
 	ins_left({
-		-- filesize component
 		"filesize",
 		cond = conditions.buffer_not_empty,
+		color = { fg = colors.comment }, -- subtle gray to keep it low-key
 	})
 
 	ins_left({
 		"filename",
 		cond = conditions.buffer_not_empty,
-		color = { fg = colors.magenta, gui = "bold" },
+		color = { fg = colors.accent, gui = "bold" }, -- cyan accent for filenames
 	})
 
-	ins_left({ "location" })
+	ins_left({
+		"location",
+		color = { fg = colors.cursor }, -- lime = matches caret
+	})
 
-	ins_left({ "progress", color = { fg = colors.fg, gui = "bold" } })
+	ins_left({
+		"progress",
+		color = { fg = colors.fg, gui = "bold" }, -- neutral text tone
+	})
 
 	ins_left({
 		"diagnostics",
 		sources = { "nvim_diagnostic" },
 		symbols = { error = " ", warn = " ", info = " " },
 		diagnostics_color = {
-			color_error = { fg = colors.red },
-			color_warn = { fg = colors.yellow },
-			color_info = { fg = colors.cyan },
+			color_error = { fg = colors.error },
+			color_warn = { fg = colors.hint },
+			color_info = { fg = colors.info },
 		},
 	})
 
-	-- Insert mid section. You can make any number of sections in neovim :)
-	-- for lualine it's any number greater then 2
+	-- Separator / spacer
 	ins_left({
 		function()
 			return "%="
 		end,
 	})
 
+	-- LSP name indicator
 	ins_left({
-		-- Lsp server name .
 		function()
-			local msg = "No Active Lsp"
+			local msg = "No Active LSP"
 			local buf_ft = vim.api.nvim_buf_get_option(0, "filetype")
 			local clients = vim.lsp.get_clients()
 			if next(clients) == nil then
@@ -177,44 +208,36 @@ function M.config()
 			return msg
 		end,
 		icon = " LSP:",
-		color = { fg = "#ffffff", gui = "bold" },
+		color = { fg = colors.error, gui = "bold" },
 	})
 
-	-- Add components to right sections
+	-- Right sections
 	ins_right({
 		require("noice").api.statusline.mode.get,
 		cond = require("noice").api.statusline.mode.has,
-		color = { fg = "#ff9e64" },
+		color = { fg = colors.cursor }, -- lime tone for messages
 	})
-
-	-- ins_right({
-	-- 	"o:encoding", -- option component same as &encoding in viml
-	-- 	fmt = string.upper, -- I'm not sure why it's upper case either ;)
-	-- 	cond = conditions.hide_in_width,
-	-- 	color = { fg = colors.green, gui = "bold" },
-	-- })
 
 	ins_right({
 		"fileformat",
 		fmt = string.upper,
-		icons_enabled = false, -- I think icons are cool but Eviline doesn't have them. sigh
-		color = { fg = colors.green, gui = "bold" },
+		icons_enabled = false,
+		color = { fg = colors.hint, gui = "bold" }, -- yellowish = subtle status info
 	})
 
 	ins_right({
 		"branch",
 		icon = "",
-		color = { fg = colors.violet, gui = "bold" },
+		color = { fg = colors.accent, gui = "bold" }, -- cyan glow for git
 	})
 
 	ins_right({
 		"diff",
-		-- Is it me or the symbol for modified us really weird
 		symbols = { added = " ", modified = "柳 ", removed = " " },
 		diff_color = {
-			added = { fg = colors.green },
-			modified = { fg = colors.orange },
-			removed = { fg = colors.red },
+			added = { fg = colors.cursor }, -- lime
+			modified = { fg = colors.accent }, -- cyan
+			removed = { fg = colors.error }, -- soft red
 		},
 		cond = conditions.hide_in_width,
 	})
@@ -223,11 +246,14 @@ function M.config()
 		function()
 			return "▊"
 		end,
-		color = { fg = colors.blue },
+		color = { fg = colors.accent },
 		padding = { left = 1 },
 	})
 
-	-- Now don't forget to initialize lualine
+	-- Make lualine respect colorscheme transparency
+	vim.api.nvim_set_hl(0, "StatusLine", { bg = "none" })
+	vim.api.nvim_set_hl(0, "StatusLineNC", { bg = "none" })
+
 	lualine.setup(config)
 end
 

@@ -2,7 +2,7 @@ local servers = {
 	"cssls",
 	"yamlls",
 	"astro",
-	-- "pylsp",
+	"pylsp",
 	"bashls",
 	"svelte",
 	"gopls",

@@ -108,7 +108,7 @@ local KisslandTheme = {
 local CatppuccinTheme = {
 	"catppuccin/nvim",
 	name = "catppuccin",
-	lazy = true,
+	-- lazy = true,
 	-- dependencies = {
 	-- 	"rktjmp/lush.nvim",
 	-- },
@@ -182,7 +182,7 @@ local CatppuccinTheme = {
 				},
 			},
 		})
-		-- vim.cmd.colorscheme("catppuccin")
+		vim.cmd.colorscheme("catppuccin")
 		vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
 		vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
 		vim.api.nvim_set_hl(0, "SignColumn", { bg = "none" })
@@ -192,14 +192,73 @@ local CatppuccinTheme = {
 
 local NightfoxTheme = {
 	"EdenEast/nightfox.nvim",
+	lazy = true,
 	config = function()
 		require("nightfox").setup({
 			options = {
 				transparent = true,
 			},
 		})
-		vim.cmd.colorscheme("carbonfox")
+		-- vim.cmd.colorscheme("carbonfox")
 	end,
 }
 
-return { CatppuccinTheme, KisslandTheme, KanagawaTheme, NightfoxTheme }
+local DarkvoidTheme = {
+	{
+		"aliqyan-21/darkvoid.nvim",
+		lazy = true,
+		config = function()
+			require("darkvoid").setup({
+				transparent = true,
+				glow = true,
+				plugins = {
+					gitsigns = true,
+					nvim_cmp = true,
+					treesitter = true,
+					nvimtree = true,
+					telescope = true,
+					lualine = true,
+					bufferline = true,
+					oil = true,
+					whichkey = true,
+					nvim_notify = true,
+				},
+			})
+
+			-- reapply transparency
+			vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+			vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+			vim.api.nvim_set_hl(0, "SignColumn", { bg = "none" })
+			vim.opt.fillchars = { eob = " " }
+
+			-- ✅ highlight fixes that Snacks and other UIs inherit
+			vim.api.nvim_set_hl(0, "Visual", { bg = "#303030", fg = "#bdfe58", bold = true })
+			vim.api.nvim_set_hl(0, "CursorLine", { bg = "#303030" })
+			vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#bdfe58", bold = true })
+		end,
+	},
+}
+
+local OneDarkTheme = {
+	"navarasu/onedark.nvim",
+	lazy = true,
+	-- priority = 10000, -- make sure to load this before all the other start plugins
+	config = function()
+		require("onedark").setup({
+			transparent = true,
+			lualine = { transparent = true },
+			style = "darker",
+		})
+		-- Enable theme
+		require("onedark").load()
+		vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+		vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+		vim.api.nvim_set_hl(0, "SignColumn", { bg = "none" })
+		vim.api.nvim_set_hl(0, "FloatBorder", { bg = "none" })
+		vim.api.nvim_set_hl(0, "WinSeparator", { bg = "none" })
+		vim.api.nvim_set_hl(0, "FloatTitle", { bg = "none" })
+		vim.opt.fillchars = { eob = " " }
+	end,
+}
+
+return { CatppuccinTheme, KisslandTheme, KanagawaTheme, NightfoxTheme, DarkvoidTheme, OneDarkTheme }
