@@ -6,7 +6,7 @@ local M = {
 	opts = {
 		ignore = '^$',
 	},
-	lazy = false,
+	event = "VeryLazy",
 }
 
 function M.config()

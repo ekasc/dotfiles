@@ -40,12 +40,12 @@ M.config = function()
 					end
 				end
 
-				vim.lsp.diagnostic.on_publish_diagnostics(_, result, ctx, config)
+				vim.diagnostic.on_publish_diagnostics(_, result, ctx, config)
 			end,
 		},
 		settings = {
 			expose_as_code_action = "all",
-			tsserver_max_memory = 4096,
+			tsserver_max_memory = 2048,
 			separate_diagnostic_server = true,
 		},
 		capabilities = utils.capabilities,

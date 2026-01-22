@@ -75,9 +75,7 @@ function M.config()
 		sorting = {
 			priority_weight = 2,
 			comparators = {
-				require("copilot_cmp.comparators").prioritize,
-
-				-- Below is the default comparitor list and order for nvim-cmp
+				-- Below is the default comparator list and order for nvim-cmp
 				cmp.config.compare.offset,
 				-- cmp.config.compare.scopes, --this is commented in nvim-cmp too
 				cmp.config.compare.exact,

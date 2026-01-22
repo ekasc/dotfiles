@@ -1,8 +1,5 @@
 local M = {
 	"OXY2DEV/markview.nvim",
-	dependencies = {
-		"saghen/blink.cmp",
-	},
 }
 
 function M.config()

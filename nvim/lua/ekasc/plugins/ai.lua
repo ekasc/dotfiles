@@ -1,7 +1,7 @@
 local M = {
 	{
 		"Exafunction/codeium.nvim",
-		lazy = false,
+		event = "InsertEnter",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 			"hrsh7th/nvim-cmp",

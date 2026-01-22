@@ -1,17 +1,21 @@
-local snacks = require("snacks")
-
 local function on_attach(client, bufnr)
 	local map = function(mode, lhs, rhs, desc)
 		vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, desc = desc })
 	end
 
+	local function snacks_picker(name)
+		return function()
+			require("snacks").picker[name]()
+		end
+	end
+
 	map("n", "gd", vim.lsp.buf.definition, "Go to definition [LSP]")
 	map("n", "gt", vim.lsp.buf.type_definition, "Go to type definition")
 	map("n", "gD", vim.lsp.buf.declaration, "Go to declaration [LSP]")
-	map("n", "gi", snacks.picker.lsp_implementations, "Go to implementation [LSP]")
-	map("n", "gw", snacks.picker.lsp_symbols, "Document symbols [LSP]")
-	map("n", "gW", snacks.picker.lsp_workspace_symbols, "Workspace symbols [LSP]")
-	map("n", "<leader>vrr", snacks.picker.lsp_references, "Show references [LSP]")
+	map("n", "gi", snacks_picker("lsp_implementations"), "Go to implementation [LSP]")
+	map("n", "gw", snacks_picker("lsp_symbols"), "Document symbols [LSP]")
+	map("n", "gW", snacks_picker("lsp_workspace_symbols"), "Workspace symbols [LSP]")
+	map("n", "<leader>vrr", snacks_picker("lsp_references"), "Show references [LSP]")
 	map("n", "<c-k>", function()
 		vim.lsp.buf.signature_help({ border = "single" })
 	end, "Signature help [LSP]")

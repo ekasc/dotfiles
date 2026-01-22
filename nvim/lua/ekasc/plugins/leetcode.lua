@@ -1,5 +1,12 @@
 local M = {
 	"kawre/leetcode.nvim",
+	cmd = "Leet",
+	keys = {
+		{ "<leader>lc", "<cmd>Leet<cr>", desc = "LeetCode" },
+		{ "<leader>ll", "<cmd>Leet list<cr>", desc = "LeetCode List" },
+		{ "<leader>ld", "<cmd>Leet daily<cr>", desc = "LeetCode Daily" },
+		{ "<leader>lr", "<cmd>Leet random<cr>", desc = "LeetCode Random" },
+	},
 	build = ":TSUpdate html",
 	dependencies = {
 		"nvim-telescope/telescope.nvim",
@@ -8,7 +15,6 @@ local M = {
 
 		-- optional
 		"nvim-treesitter/nvim-treesitter",
-		-- "rcarriga/nvim-notify",
 		"nvim-tree/nvim-web-devicons",
 	},
 	opts = {
