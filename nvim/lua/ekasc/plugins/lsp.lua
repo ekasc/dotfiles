@@ -29,19 +29,9 @@ local M = {
 		{ "WhoIsSethDaniel/mason-tool-installer.nvim" },
 		{ "OmniSharp/omnisharp-vim" },
 		{ "Zeioth/garbage-day.nvim", event = "VeryLazy" },
-		{
-			"nvim-java/nvim-java",
-			ft = "java",
-			dependencies = {
-				{ "nvim-java/nvim-java-refactor" },
-				{ "nvim-java/nvim-java-core" },
-				{ "nvim-java/nvim-java-test" },
-				{ "nvim-java/nvim-java-dap" },
-				{ "nvim-java/lua-async-await" },
-				{ "JavaHello/spring-boot.nvim" },
-				{ "mfussenegger/nvim-dap" },
-			},
-		},
+		-- Minimal Java: use nvim-jdtls directly (ftplugin/java.lua starts it per-project)
+		{ "mfussenegger/nvim-jdtls", ft = { "java" } },
+		{ "JavaHello/spring-boot.nvim", ft = { "java", "yaml", "jproperties" } },
 	},
 }
 
@@ -80,7 +70,13 @@ function M.config()
 
 	-- Mason tool installer and lspconfig setup
 	require("mason-tool-installer").setup({
-		ensure_installed = { "prettier", "stylua" },
+		ensure_installed = {
+			"prettier",
+			"stylua",
+			-- Java
+			"jdtls",
+			"google-java-format",
+		},
 	})
 
 	require("mason-lspconfig").setup({

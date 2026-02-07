@@ -1,5 +1,6 @@
 local M = {
 	"folke/noice.nvim",
+	enabled = true,
 	dependencies = {
 		"MunifTanjim/nui.nvim",
 		"rcarriga/nvim-notify",
@@ -12,8 +13,8 @@ function M.config()
 	require("noice").setup({
 		lsp = {
 			override = {
-				["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-				["vim.lsp.util.stylize_markdown"] = true,
+				-- ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+				-- ["vim.lsp.util.stylize_markdown"] = true,
 				["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
 			},
 			hover = {
@@ -23,8 +24,12 @@ function M.config()
 					max_width = 80,
 				},
 			},
+			-- Keep noice from intercepting builtin LSP UI commands like :LspInfo.
+			message = { enabled = false },
 		},
+
 		presets = {
+
 			bottom_search = true, -- use a classic bottom cmdline for search
 			command_palette = true, -- position the cmdline and popupmenu together
 			long_message_to_split = true, -- long messages will be sent to a split

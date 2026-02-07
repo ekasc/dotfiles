@@ -7,7 +7,12 @@ local M = {
 			"hrsh7th/nvim-cmp",
 		},
 		config = function()
-			require("codeium").setup({})
+			require("codeium").setup({
+				-- The Codeium server can be heavy on large repos.
+				-- Keep it from scanning an enormous workspace by default.
+				enable_index_service = false,
+				enable_local_search = false,
+			})
 		end,
 	},
 	{

@@ -1,6 +1,7 @@
 local M = {
-	'nvim-treesitter/nvim-treesitter-context',
-	lazy=true,
+	"nvim-treesitter/nvim-treesitter-context",
+	enabled = true,
+	lazy = true,
 }
 
 function M.config()

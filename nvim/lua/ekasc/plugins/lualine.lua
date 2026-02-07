@@ -28,11 +28,6 @@ function M.config()
 		hide_in_width = function()
 			return vim.fn.winwidth(0) > 80
 		end,
-		check_git_workspace = function()
-			local filepath = vim.fn.expand("%:p:h")
-			local gitdir = vim.fn.finddir(".git", filepath .. ";")
-			return gitdir and #gitdir > 0 and #gitdir < #filepath
-		end,
 	}
 
 	local theme = {
@@ -190,18 +185,18 @@ function M.config()
 		end,
 	})
 
-	-- LSP name indicator
+	-- LSP name indicator (avoid heavy work in statusline)
 	ins_left({
 		function()
 			local msg = "No Active LSP"
 			local buf_ft = vim.api.nvim_buf_get_option(0, "filetype")
-			local clients = vim.lsp.get_clients()
-			if next(clients) == nil then
+			local clients = vim.lsp.get_clients({ bufnr = 0 })
+			if not clients or next(clients) == nil then
 				return msg
 			end
 			for _, client in ipairs(clients) do
-				local filetypes = client.config.filetypes
-				if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
+				local filetypes = client.config and client.config.filetypes
+				if filetypes and vim.tbl_contains(filetypes, buf_ft) then
 					return client.name
 				end
 			end
@@ -212,34 +207,13 @@ function M.config()
 	})
 
 	-- Right sections
-	ins_right({
-		require("noice").api.statusline.mode.get,
-		cond = require("noice").api.statusline.mode.has,
-		color = { fg = colors.cursor }, -- lime tone for messages
-	})
-
+	-- Keep the statusline lightweight. Git branch/diff + external statusline integrations
+	-- can trigger expensive filesystem checks on every redraw, which was causing freezes.
 	ins_right({
 		"fileformat",
 		fmt = string.upper,
 		icons_enabled = false,
-		color = { fg = colors.hint, gui = "bold" }, -- yellowish = subtle status info
-	})
-
-	ins_right({
-		"branch",
-		icon = "",
-		color = { fg = colors.accent, gui = "bold" }, -- cyan glow for git
-	})
-
-	ins_right({
-		"diff",
-		symbols = { added = " ", modified = "柳 ", removed = " " },
-		diff_color = {
-			added = { fg = colors.cursor }, -- lime
-			modified = { fg = colors.accent }, -- cyan
-			removed = { fg = colors.error }, -- soft red
-		},
-		cond = conditions.hide_in_width,
+		color = { fg = colors.hint, gui = "bold" },
 	})
 
 	ins_right({

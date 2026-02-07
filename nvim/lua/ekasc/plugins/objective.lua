@@ -1,5 +1,6 @@
 local M = {
 	"ekasc/objective.nvim",
+	enabled = true,
 	-- dir = "~/Projects/lua/objective.nvim",
 	-- name = "objective.nvim",
 	dependencies = { "MunifTanjim/nui.nvim" },

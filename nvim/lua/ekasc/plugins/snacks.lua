@@ -5,11 +5,19 @@ local M = {
 
 	---@type snacks.Config
 	opts = {
-		explorer = { enabled = true, replace_netrw = true },
+		explorer = {
+			enabled = true,
+			-- Avoid BufEnter hooks that replace netrw (can cause redraw loops on special buffers).
+			replace_netrw = false,
+		},
 		dashboard = { enabled = false, example = "startify" },
 		notifier = { enabled = true },
 		indent = { enabled = true },
+		-- disable images (extra WinScrolled work)
+		image = { enabled = false },
 		git = { enabled = true },
+		-- Smooth-scrolling + heavy WinScrolled handlers can peg CPU on some setups.
+		-- Keep only the window animations you explicitly use.
 		animate = {
 			enabled = true,
 			style = {
@@ -21,6 +29,7 @@ local M = {
 				ft = "git",
 			},
 		},
+		scroll = { enabled = false },
 		lazygit = { enabled = true },
 		-- statuscolumn = { enabled = true },
 		picker = { enabled = true },

@@ -6,6 +6,7 @@ local M = {
 	{
 		"lukas-reineke/indent-blankline.nvim",
 		main = "ibl",
+		enabled = false,
 		event = { "BufReadPost", "BufNewFile" },
 		---@module "ibl"
 		---@type ibl.config
