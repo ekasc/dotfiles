@@ -9,16 +9,16 @@ local servers = {
 	"jsonls",
 	-- "jdtls",
 	-- "clangd",
-	"texlab",
 	"html",
-	"sqlls",
+	-- "sqlls",
 	-- "rust_analyzer",
 	-- "ts_ls",
 	"tailwindcss",
 	"lua_ls",
 	"tombi",
 	-- "intelephense",
-	"phpactor",
+	-- "phpactor",
+	"postgres_lsp",
 }
 
 for _, server in ipairs(servers) do

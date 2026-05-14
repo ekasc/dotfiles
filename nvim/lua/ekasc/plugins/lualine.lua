@@ -65,8 +65,8 @@ function M.config()
 
 	local config = {
 		options = {
-			theme = "catppuccin",
-			-- theme = theme,
+			-- theme = "catppuccin",
+			theme = theme,
 			component_separators = "",
 			section_separators = "",
 			disabled_filetypes = {},
@@ -209,12 +209,19 @@ function M.config()
 	-- Right sections
 	-- Keep the statusline lightweight. Git branch/diff + external statusline integrations
 	-- can trigger expensive filesystem checks on every redraw, which was causing freezes.
-	ins_right({
-		"fileformat",
-		fmt = string.upper,
-		icons_enabled = false,
-		color = { fg = colors.hint, gui = "bold" },
-	})
+	-- ins_right({
+	-- 	name = "sidekick",
+	-- 	function()
+	-- 		local status = require("sidekick.status").cli()
+	-- 		return " " .. (#status > 1 and #status or "")
+	-- 	end,
+	-- 	cond = function()
+	-- 		return #require("sidekick.status").cli() > 0
+	-- 	end,
+	-- 	color = function()
+	-- 		return "Special"
+	-- 	end,
+	-- })
 
 	ins_right({
 		function()

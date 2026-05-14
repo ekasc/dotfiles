@@ -46,10 +46,6 @@ yabai -m config layout bsp \
 	window_shadow float \
 	auto_balance on
 
-$HOME/.config/yabai/scripts/rebalance-displays.sh
-yabai -m signal --add event=display_added action="$HOME/.config/yabai/scripts/rebalance-displays.sh"
-yabai -m signal --add event=display_removed action="$HOME/.config/yabai/scripts/rebalance-displays.sh"
-
 # window_border off
 # normal_window_border_color 0xD6B4FC
 # external_bar all:0:0

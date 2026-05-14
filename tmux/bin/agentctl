@@ -1,0 +1,501 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+AGENT_WINDOW_NAME="agents"
+AGENT_LOCK_NAME="agent-build-test"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SELF_PATH="$SCRIPT_DIR/agentctl"
+MANAGED_TITLES=(main supervisor test logs)
+
+die() {
+  printf 'agentctl: %s\n' "$*" >&2
+  exit 1
+}
+
+filter_control_output() {
+  while IFS= read -r line; do
+    case "$line" in
+      %begin*|%end*|%exit*)
+        ;;
+      *)
+        printf '%s\n' "$line"
+        ;;
+    esac
+  done
+}
+
+tmuxc() {
+  local output status
+  output="$(tmux -C "$@" 2>&1)" || {
+    status=$?
+    printf '%s\n' "$output" | filter_control_output >&2
+    return "$status"
+  }
+  printf '%s\n' "$output" | filter_control_output
+}
+
+shell_quote() {
+  local value=${1-}
+  value=${value//\'/\'\\\'\'}
+  printf "'%s'" "$value"
+}
+
+sanitize_name() {
+  printf '%s' "$1" | tr -cs 'A-Za-z0-9._-' '_'
+}
+
+managed_title() {
+  local title=${1-}
+  local candidate
+  for candidate in "${MANAGED_TITLES[@]}"; do
+    if [[ "$candidate" == "$title" ]]; then
+      return 0
+    fi
+  done
+  return 1
+}
+
+current_session() {
+  local session
+  if [[ -n "${TMUX:-}" ]]; then
+    session="$(tmuxc display-message -p '#{session_name}' | head -n1)"
+  else
+    session="$(tmuxc list-sessions -F '#{session_name}' | head -n1)"
+  fi
+  [[ -n "$session" ]] || die "no tmux session available"
+  printf '%s\n' "$session"
+}
+
+current_path() {
+  if [[ -n "${TMUX:-}" ]]; then
+    tmuxc display-message -p '#{pane_current_path}' | head -n1
+  else
+    pwd
+  fi
+}
+
+current_pane_id() {
+  if [[ -n "${TMUX:-}" ]]; then
+    tmuxc display-message -p '#{pane_id}' | head -n1
+  fi
+}
+
+resolve_root() {
+  local path=${1-}
+  if [[ -z "$path" ]]; then
+    pwd
+    return 0
+  fi
+  git -C "$path" rev-parse --show-toplevel 2>/dev/null || printf '%s\n' "$path"
+}
+
+window_id_by_name() {
+  local session=$1
+  local name=$2
+  local line window_id window_name
+  while IFS= read -r line; do
+    window_id=${line%%|*}
+    window_name=${line#*|}
+    if [[ "$window_name" == "$name" ]]; then
+      printf '%s\n' "$window_id"
+      return 0
+    fi
+  done < <(tmuxc list-windows -t "$session" -F '#{window_id}|#{window_name}')
+  return 1
+}
+
+window_root() {
+  local window_id=$1
+  tmuxc display-message -p -t "$window_id" '#{@agent_root}' | head -n1
+}
+
+workspace_root_for_session() {
+  local session=$1
+  local fallback_path=$2
+  local window_id root
+  if window_id="$(window_id_by_name "$session" "$AGENT_WINDOW_NAME" 2>/dev/null)"; then
+    root="$(window_root "$window_id")"
+    if [[ -n "$root" ]]; then
+      printf '%s\n' "$root"
+      return 0
+    fi
+  fi
+  resolve_root "$fallback_path"
+}
+
+pane_record_by_title() {
+  local window_id=$1
+  local title=$2
+  local line
+  while IFS= read -r line; do
+    [[ "${line#*|}" == "$title|"* ]] || continue
+    printf '%s\n' "$line"
+    return 0
+  done < <(tmuxc list-panes -t "$window_id" -F '#{pane_id}|#{pane_title}|#{pane_dead}|#{pane_current_path}')
+  return 1
+}
+
+pane_id_by_title() {
+  local window_id=$1
+  local title=$2
+  local record
+  record="$(pane_record_by_title "$window_id" "$title" 2>/dev/null)" || return 1
+  printf '%s\n' "${record%%|*}"
+}
+
+pane_info() {
+  local pane_id=$1
+  tmuxc display-message -p -t "$pane_id" '#{session_name}|#{window_name}|#{pane_title}|#{pane_dead}|#{pane_current_path}|#{@agent_role}|#{@agent_log_path}|#{@agent_root}|#{@agent_managed}' | head -n1
+}
+
+is_managed_pane() {
+  local pane_id=$1
+  local info window_name role managed
+  info="$(pane_info "$pane_id")"
+  window_name="$(printf '%s' "$info" | cut -d'|' -f2)"
+  role="$(printf '%s' "$info" | cut -d'|' -f6)"
+  managed="$(printf '%s' "$info" | cut -d'|' -f9)"
+  [[ "$window_name" == "$AGENT_WINDOW_NAME" && "$managed" == "1" && -n "$role" ]]
+}
+
+log_path_for() {
+  local session_name=$1
+  local window_name=$2
+  local role=$3
+  local root=$4
+  printf '%s/.tmux/%s.%s.%s.log\n' \
+    "$root" \
+    "$(sanitize_name "$session_name")" \
+    "$(sanitize_name "$window_name")" \
+    "$(sanitize_name "$role")"
+}
+
+set_agent_window_metadata() {
+  local window_id=$1
+  local root=$2
+  tmuxc set-option -wt "$window_id" @agent_workspace 1 >/dev/null
+  tmuxc set-option -wt "$window_id" @agent_root "$root" >/dev/null
+  tmuxc set-window-option -t "$window_id" automatic-rename off >/dev/null
+  tmuxc set-window-option -t "$window_id" remain-on-exit on >/dev/null
+  tmuxc set-window-option -t "$window_id" remain-on-exit-format 'agent pane exited: #{pane_title} (prefix+A r to respawn)' >/dev/null
+}
+
+set_pane_role() {
+  local pane_id=$1
+  local role=$2
+  local root=$3
+  local session_name window_name log_path
+
+  tmuxc select-pane -t "$pane_id" -T "$role" >/dev/null
+  tmuxc set-option -pt "$pane_id" @agent_managed 1 >/dev/null
+  tmuxc set-option -pt "$pane_id" @agent_role "$role" >/dev/null
+  tmuxc set-option -pt "$pane_id" @agent_root "$root" >/dev/null
+
+  session_name="$(tmuxc display-message -p -t "$pane_id" '#{session_name}' | head -n1)"
+  window_name="$(tmuxc display-message -p -t "$pane_id" '#{window_name}' | head -n1)"
+  log_path="$(log_path_for "$session_name" "$window_name" "$role" "$root")"
+  tmuxc set-option -pt "$pane_id" @agent_log_path "$log_path" >/dev/null
+}
+
+attach_log_to_pane() {
+  local pane_id=$1
+  local info session_name window_name role root log_path window_id
+
+  is_managed_pane "$pane_id" || return 0
+  info="$(pane_info "$pane_id")"
+  session_name="$(printf '%s' "$info" | cut -d'|' -f1)"
+  window_name="$(printf '%s' "$info" | cut -d'|' -f2)"
+  role="$(printf '%s' "$info" | cut -d'|' -f6)"
+  root="$(printf '%s' "$info" | cut -d'|' -f8)"
+
+  window_id="$(tmuxc display-message -p -t "$pane_id" '#{window_id}' | head -n1)"
+  [[ -n "$root" ]] || root="$(window_root "$window_id")"
+  [[ -n "$root" ]] || root="$(resolve_root "$(printf '%s' "$info" | cut -d'|' -f5)")"
+  mkdir -p "$root/.tmux"
+  log_path="$(log_path_for "$session_name" "$window_name" "$role" "$root")"
+
+  tmuxc set-option -pt "$pane_id" @agent_log_path "$log_path" >/dev/null
+  tmuxc pipe-pane -o -t "$pane_id" "cat >> $(shell_quote "$log_path")" >/dev/null
+}
+
+attach_logs_for_window() {
+  local window_id=$1
+  local pane_id
+  for pane_id in $(tmuxc list-panes -t "$window_id" -F '#{pane_id}'); do
+    attach_log_to_pane "$pane_id"
+  done
+}
+
+workspace_has_managed_panes() {
+  local window_id=$1
+  local role
+  while IFS= read -r role; do
+    [[ -n "$role" ]] && return 0
+  done < <(tmuxc list-panes -t "$window_id" -F '#{@agent_role}')
+  return 1
+}
+
+ensure_workspace() {
+  local session path root window_id first_pane pane_id title
+  session="$(current_session)"
+  path="$(current_path)"
+  root="$(workspace_root_for_session "$session" "$path")"
+
+  if ! window_id="$(window_id_by_name "$session" "$AGENT_WINDOW_NAME" 2>/dev/null)"; then
+    window_id="$(tmuxc new-window -d -P -F '#{window_id}' -t "$session:" -n "$AGENT_WINDOW_NAME" -c "$root" | head -n1)"
+  fi
+
+  set_agent_window_metadata "$window_id" "$root"
+
+  if ! pane_id_by_title "$window_id" main >/dev/null 2>&1; then
+    if workspace_has_managed_panes "$window_id"; then
+      pane_id="$(tmuxc split-window -d -P -F '#{pane_id}' -t "$window_id" -c "$root" | head -n1)"
+      set_pane_role "$pane_id" main "$root"
+    else
+      first_pane="$(tmuxc list-panes -t "$window_id" -F '#{pane_id}' | head -n1)"
+      [[ -n "$first_pane" ]] || die "agent workspace has no panes"
+      set_pane_role "$first_pane" main "$root"
+    fi
+  fi
+
+  for title in supervisor test logs; do
+    if ! pane_id_by_title "$window_id" "$title" >/dev/null 2>&1; then
+      pane_id="$(tmuxc split-window -d -P -F '#{pane_id}' -t "$window_id" -c "$root" | head -n1)"
+      set_pane_role "$pane_id" "$title" "$root"
+    fi
+  done
+
+  attach_logs_for_window "$window_id"
+  tmuxc select-layout -t "$window_id" tiled >/dev/null
+  tmuxc select-window -t "$window_id" >/dev/null
+  tmuxc select-pane -t "$(pane_id_by_title "$window_id" main)" >/dev/null
+}
+
+require_workspace_window() {
+  local session window_id
+  session="$(current_session)"
+  window_id="$(window_id_by_name "$session" "$AGENT_WINDOW_NAME" 2>/dev/null)" || die "no agents workspace in session $session"
+  printf '%s\n' "$window_id"
+}
+
+default_role_for_context() {
+  local pane_id info role
+  pane_id="$(current_pane_id)"
+  if [[ -n "$pane_id" ]] && is_managed_pane "$pane_id"; then
+    info="$(pane_info "$pane_id")"
+    role="$(printf '%s' "$info" | cut -d'|' -f6)"
+    printf '%s\n' "$role"
+    return 0
+  fi
+  printf 'test\n'
+}
+
+popup_shell() {
+  local session path root shell_cmd
+  session="$(current_session)"
+  path="$(current_path)"
+  root="$(workspace_root_for_session "$session" "$path")"
+  shell_cmd="$(shell_quote "${SHELL:-/bin/zsh}") -l"
+  tmuxc display-popup -E -d "$root" -T "agent popup" "$shell_cmd" >/dev/null
+}
+
+prompt_run() {
+  local mode=${1-}
+  local command
+  [[ "$mode" == "build" || "$mode" == "test" ]] || die "prompt-run expects build or test"
+
+  printf '%s command: ' "$mode"
+  IFS= read -r command || exit 0
+  [[ -n "$command" ]] || exit 0
+  "$SELF_PATH" run "$mode" -- "$command"
+}
+
+run_command_in_test_pane() {
+  local mode=$1
+  shift || true
+  [[ "${1-}" != "--" ]] || shift
+  local command_string="$*"
+  local session path root window_id pane_id runner
+
+  [[ "$mode" == "build" || "$mode" == "test" ]] || die "run expects build or test"
+  [[ -n "$command_string" ]] || die "missing command string"
+
+  ensure_workspace
+  session="$(current_session)"
+  path="$(current_path)"
+  root="$(workspace_root_for_session "$session" "$path")"
+  window_id="$(require_workspace_window)"
+  pane_id="$(pane_id_by_title "$window_id" test)" || die "missing test pane"
+
+  read -r -d '' runner <<'EOF' || true
+tmux wait-for -L "$1"
+cleanup() {
+  tmux wait-for -U "$1"
+}
+trap cleanup EXIT INT TERM HUP
+cd -- "$2" || exit 1
+printf '[agent:%s] %s\n' "$3" "$4"
+eval "$4"
+EOF
+
+  tmuxc respawn-pane -k -t "$pane_id" -c "$root" sh -lc "$runner" sh "$AGENT_LOCK_NAME" "$root" "$mode" "$command_string" >/dev/null
+  attach_log_to_pane "$pane_id"
+  tmuxc select-window -t "$window_id" >/dev/null
+  tmuxc select-pane -t "$pane_id" >/dev/null
+}
+
+resolve_target_pane() {
+  local input=${1-}
+  local window_id pane_id
+  window_id="$(require_workspace_window)"
+
+  if [[ -z "$input" ]]; then
+    input="$(default_role_for_context)"
+  fi
+
+  if [[ "$input" == %* ]]; then
+    printf '%s\n' "$input"
+    return 0
+  fi
+
+  pane_id="$(pane_id_by_title "$window_id" "$input" 2>/dev/null)" || die "unknown pane title: $input"
+  printf '%s\n' "$pane_id"
+}
+
+tail_log_popup() {
+  local target=${1-}
+  local pane_id info role log_path popup_cmd
+  pane_id="$(resolve_target_pane "$target")"
+  info="$(pane_info "$pane_id")"
+  role="$(printf '%s' "$info" | cut -d'|' -f6)"
+  log_path="$(printf '%s' "$info" | cut -d'|' -f7)"
+
+  [[ -n "$log_path" ]] || die "no log path configured for $role"
+  mkdir -p "$(dirname "$log_path")"
+  touch "$log_path"
+  popup_cmd="exec tail -n 200 -F $(shell_quote "$log_path")"
+  tmuxc display-popup -E -T "log:$role" "$popup_cmd" >/dev/null
+}
+
+respawn_target() {
+  local target=${1-}
+  local pane_id info role root window_id
+  pane_id="$(resolve_target_pane "$target")"
+  is_managed_pane "$pane_id" || die "pane $pane_id is not a managed agent pane"
+  info="$(pane_info "$pane_id")"
+  role="$(printf '%s' "$info" | cut -d'|' -f6)"
+  root="$(printf '%s' "$info" | cut -d'|' -f8)"
+  window_id="$(tmuxc display-message -p -t "$pane_id" '#{window_id}' | head -n1)"
+  [[ -n "$root" ]] || root="$(window_root "$window_id")"
+  [[ -n "$root" ]] || root="$(resolve_root "$(printf '%s' "$info" | cut -d'|' -f5)")"
+
+  tmuxc respawn-pane -k -t "$pane_id" -c "$root" >/dev/null
+  set_pane_role "$pane_id" "$role" "$root"
+  attach_log_to_pane "$pane_id"
+}
+
+status_report() {
+  local session window_id root
+  session="$(current_session)"
+  if ! window_id="$(window_id_by_name "$session" "$AGENT_WINDOW_NAME" 2>/dev/null)"; then
+    printf 'session: %s\nworkspace: missing\n' "$session"
+    return 0
+  fi
+
+  root="$(window_root "$window_id")"
+  printf 'session: %s\n' "$session"
+  printf 'window: %s\n' "$AGENT_WINDOW_NAME"
+  printf 'root: %s\n' "${root:-unknown}"
+  printf 'lock: %s\n\n' "$AGENT_LOCK_NAME"
+  printf '%-6s %-12s %-6s %s\n' 'pane' 'role' 'state' 'log'
+
+  tmuxc list-panes -t "$window_id" -F '#{pane_id}|#{@agent_role}|#{pane_dead}|#{@agent_log_path}' |
+    while IFS='|' read -r pane_id role dead log_path; do
+      [[ -n "$role" ]] || continue
+      if [[ "$dead" == "1" ]]; then
+        dead="dead"
+      else
+        dead="live"
+      fi
+      printf '%-6s %-12s %-6s %s\n' "$pane_id" "$role" "$dead" "${log_path:-unset}"
+    done
+}
+
+attach_log_hook() {
+  local pane_id=${1-}
+  [[ -n "$pane_id" ]] || die "attach-log expects a pane id"
+  attach_log_to_pane "$pane_id"
+}
+
+notify_pane_died() {
+  local pane_id=${1-}
+  local info role log_path
+  [[ -n "$pane_id" ]] || die "notify-pane-died expects a pane id"
+  is_managed_pane "$pane_id" || return 0
+  info="$(pane_info "$pane_id")"
+  role="$(printf '%s' "$info" | cut -d'|' -f6)"
+  log_path="$(printf '%s' "$info" | cut -d'|' -f7)"
+  tmuxc display-message "agent pane ${role} exited; log: ${log_path}" >/dev/null
+}
+
+usage() {
+  cat <<'EOF'
+usage:
+  agentctl ensure-workspace
+  agentctl popup
+  agentctl prompt-run <build|test>
+  agentctl run <build|test> -- <command>
+  agentctl tail-log [pane-title]
+  agentctl respawn [pane-title]
+  agentctl status
+
+internal:
+  agentctl attach-log <pane-id>
+  agentctl notify-pane-died <pane-id>
+EOF
+}
+
+main() {
+  local subcommand=${1-}
+  shift || true
+
+  case "$subcommand" in
+    ensure-workspace)
+      ensure_workspace
+      ;;
+    popup)
+      popup_shell
+      ;;
+    prompt-run)
+      prompt_run "$@"
+      ;;
+    run)
+      [[ $# -ge 1 ]] || die "run expects build or test"
+      run_command_in_test_pane "$@"
+      ;;
+    tail-log)
+      tail_log_popup "${1-}"
+      ;;
+    respawn)
+      respawn_target "${1-}"
+      ;;
+    status)
+      status_report
+      ;;
+    attach-log)
+      attach_log_hook "${1-}"
+      ;;
+    notify-pane-died)
+      notify_pane_died "${1-}"
+      ;;
+    ""|-h|--help|help)
+      usage
+      ;;
+    *)
+      die "unknown subcommand: $subcommand"
+      ;;
+  esac
+}
+
+main "$@"

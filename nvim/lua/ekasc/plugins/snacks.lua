@@ -7,7 +7,6 @@ local M = {
 	opts = {
 		explorer = {
 			enabled = true,
-			-- Avoid BufEnter hooks that replace netrw (can cause redraw loops on special buffers).
 			replace_netrw = false,
 		},
 		dashboard = { enabled = false, example = "startify" },
@@ -32,7 +31,16 @@ local M = {
 		scroll = { enabled = false },
 		lazygit = { enabled = true },
 		-- statuscolumn = { enabled = true },
-		picker = { enabled = true },
+		picker = {
+			enabled = true,
+			sources = {
+				explorer = {
+					hidden = true,
+					ignored = true,
+					git_untracked = true,
+				},
+			},
+		},
 	},
 	keys = {
 		{

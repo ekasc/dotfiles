@@ -96,6 +96,11 @@ function M.config()
 	-- Conform Setup
 	---@diagnostic disable-next-line: undefined-doc-name
 	---@type conform.setupOpts
+	local mason_bin = vim.fn.stdpath("data") .. "/mason/bin"
+
+	-- First setup mason-conform to register Mason tools
+	require("mason-conform").setup({})
+
 	require("conform").setup({
 		formatters = {
 			["php-cs-fixer"] = {
@@ -127,6 +132,8 @@ function M.config()
 			html = { "prettierd", "prettier", stop_after_first = true },
 			php = { "php-cs-fixer" },
 			[".sty"] = { "tex-fmt" },
+			sql = { "pg_format" },
+			pgsql = { "pg_format" },
 		},
 		default_format_opts = { lsp_format = "fallback" },
 		log_level = vim.log.levels.ERROR,
@@ -135,8 +142,6 @@ function M.config()
 		-- Conform will notify you when no formatters are available for the buffer
 		notify_no_formatters = true,
 	})
-
-	require("mason-conform").setup({})
 
 	require("ekasc.lsp")
 end

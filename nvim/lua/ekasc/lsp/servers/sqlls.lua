@@ -4,5 +4,5 @@ return {
 	on_attach = utils.on_attach,
 	capabilities = utils.capabilities,
 	autostart = false,
-	filetypes = { "sql", "mysql", "sqlite", "pgsql" },
+	filetypes = { "sql" },
 }
