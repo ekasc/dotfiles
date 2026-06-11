@@ -12,6 +12,9 @@ local M = {
 		dashboard = { enabled = false, example = "startify" },
 		notifier = { enabled = true },
 		indent = { enabled = true },
+		scope = {
+			treesitter = { injections = false },
+		},
 		-- disable images (extra WinScrolled work)
 		image = { enabled = false },
 		git = { enabled = true },
