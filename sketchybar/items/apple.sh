@@ -1,34 +1,12 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
-POPUP_OFF="sketchybar --set apple.logo popup.drawing=off"
-POPUP_CLICK_SCRIPT="sketchybar --set \$NAME popup.drawing=toggle"
-
-sketchybar --add item apple.logo left \
-    --set apple.logo icon=􀣺 \
-    icon.color=$WHITE \
+sketchybar --add item apple left \
+  --set apple \
+    icon="" \
+    icon.font="SF Pro:Bold:17.0" \
+    icon.color="$ACCENT" \
     icon.padding_left=10 \
     icon.padding_right=10 \
-    background.padding_left=-1 \
-    background.padding_right=10 \
-    background.height=30 \
-    background.corner_radius=$CORNER_RADIUS \
     label.drawing=off \
-    click_script="$POPUP_CLICK_SCRIPT" \
-    \
-    --add item apple.prefs popup.apple.logo \
-    --set apple.prefs icon=$PREFERENCES \
-    label="Preferences" \
-    click_script="open -a 'System Preferences';
-                                              $POPUP_OFF" \
-    \
-    --add item apple.activity popup.apple.logo \
-    --set apple.activity icon=$ACTIVITY \
-    label="Activity" \
-    click_script="open -a 'Activity Monitor';
-                                              $POPUP_OFF" \
-    \
-	--add item apple.lock popup.apple.logo \
-	--set apple.lock icon=$LOCK \
-	label="Lock Screen" \
-    click_script="pmset displaysleepnow;
-                                              $POPUP_OFF"
+    padding_right=4 \
+    click_script='open -a "System Settings"'
