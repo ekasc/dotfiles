@@ -1,0 +1,252 @@
+# Rovr configuration.
+# i3-style dynamic workspaces: only desktop 1 exists by default (persistent).
+# alt-2..9 spawn a desktop on demand; switching away from an empty one
+# destroys it. No [[workspace]] entries needed for the spawned ones.
+
+[[workspace]]
+name = "1"
+persistent = true
+
+# In-process global hotkeys (zero process spawn per press).
+# Commands use rovr CLI syntax WITHOUT the leading binary name.
+# Binds that need $(rovr query focused ...) shell substitution stay in skhdrc.
+
+[[bind]]
+key = "shift + alt - r"
+command = "config reload"
+
+[[bind]]
+key = "alt - 1"
+command = "workspace focus 1"
+
+[[bind]]
+key = "alt - 2"
+command = "workspace focus 2"
+
+[[bind]]
+key = "alt - 3"
+command = "workspace focus 3"
+
+[[bind]]
+key = "alt - 4"
+command = "workspace focus 4"
+
+[[bind]]
+key = "alt - 5"
+command = "workspace focus 5"
+
+[[bind]]
+key = "alt - 6"
+command = "workspace focus 6"
+
+[[bind]]
+key = "alt - 7"
+command = "workspace focus 7"
+
+[[bind]]
+key = "alt - 8"
+command = "workspace focus 8"
+
+[[bind]]
+key = "alt - 9"
+command = "workspace focus 9"
+
+# External-display space stepping (user preference, not defaults).
+# alt+tab / alt+shift+tab step the EXTERNAL display's spaces from anywhere.
+# (macOS doesn't use alt+tab itself — that's cmd+tab — so it's free.)
+[[bind]]
+key = "alt - tab"
+command = "space next 2"
+
+[[bind]]
+key = "alt + shift - tab"
+command = "space prev 2"
+
+[[bind]]
+key = "alt - a"
+command = "space create"
+
+# ---- yabai-parity binds (migrated from skhdrc; all in-process) ----
+
+[[bind]]
+key = "shift + alt - q"
+command = "window close"
+
+[[bind]]
+key = "shift + alt - f"
+command = "window toggle-fullscreen"
+
+[[bind]]
+key = "ctrl + cmd - f"
+command = "window toggle-fullscreen"
+
+# Topmost ≈ floating layer (kCGFloatingWindowLevel).
+[[bind]]
+key = "alt - p"
+command = "window set-layer 3"
+
+[[bind]]
+key = "alt - t"
+command = "window toggle-float"
+
+# Directional warp / swap against the BSP tree.
+[[bind]]
+key = "shift + alt - h"
+command = "window warp-dir west"
+
+[[bind]]
+key = "shift + alt - j"
+command = "window warp-dir south"
+
+[[bind]]
+key = "shift + alt - k"
+command = "window warp-dir north"
+
+[[bind]]
+key = "shift + alt - l"
+command = "window warp-dir east"
+
+[[bind]]
+key = "ctrl + alt - h"
+command = "window swap-dir west"
+
+[[bind]]
+key = "ctrl + alt - j"
+command = "window swap-dir south"
+
+[[bind]]
+key = "ctrl + alt - k"
+command = "window swap-dir north"
+
+[[bind]]
+key = "ctrl + alt - l"
+command = "window swap-dir east"
+
+# Focus-direction now defaults to the focused window (no jq subshell).
+[[bind]]
+key = "alt - h"
+command = "window focus-direction west"
+
+[[bind]]
+key = "alt - j"
+command = "window focus-direction south"
+
+[[bind]]
+key = "alt - k"
+command = "window focus-direction north"
+
+[[bind]]
+key = "alt - l"
+command = "window focus-direction east"
+
+# move-to-workspace now defaults to the focused window.
+[[bind]]
+key = "ctrl + alt - 1"
+command = "window move-to-workspace 1"
+
+[[bind]]
+key = "ctrl + alt - 2"
+command = "window move-to-workspace 2"
+
+[[bind]]
+key = "ctrl + alt - 3"
+command = "window move-to-workspace 3"
+
+[[bind]]
+key = "ctrl + alt - 4"
+command = "window move-to-workspace 4"
+
+[[bind]]
+key = "ctrl + alt - 5"
+command = "window move-to-workspace 5"
+
+[[bind]]
+key = "ctrl + alt - 6"
+command = "window move-to-workspace 6"
+
+[[bind]]
+key = "ctrl + alt - 7"
+command = "window move-to-workspace 7"
+
+[[bind]]
+key = "ctrl + alt - 8"
+command = "window move-to-workspace 8"
+
+[[bind]]
+key = "ctrl + alt - 9"
+command = "window move-to-workspace 9"
+
+[[bind]]
+key = "shift + alt - s"
+command = "layout rotate"
+
+[[bind]]
+key = "shift + alt - 0"
+command = "layout balance"
+
+# Switch to the space that was current before this one.
+[[bind]]
+key = "alt - space"
+command = "space focus-recent"
+
+# Collapse/restore all gap+padding for the session (yabai alt-g parity).
+[[bind]]
+key = "alt - g"
+command = "space toggle-insets"
+
+# Move the focused window to workspace 1 (stay where you are).
+[[bind]]
+key = "shift + alt - 1"
+command = "window move-to-workspace 1"
+
+# Move the focused window to workspace 2 (stay where you are).
+[[bind]]
+key = "shift + alt - 2"
+command = "window move-to-workspace 2"
+
+# Move the focused window to workspace 3 (stay where you are).
+[[bind]]
+key = "shift + alt - 3"
+command = "window move-to-workspace 3"
+
+# Move the focused window to workspace 4 (stay where you are).
+[[bind]]
+key = "shift + alt - 4"
+command = "window move-to-workspace 4"
+
+# Move the focused window to workspace 5 (stay where you are).
+[[bind]]
+key = "shift + alt - 5"
+command = "window move-to-workspace 5"
+
+# Move the focused window to workspace 6 (stay where you are).
+[[bind]]
+key = "shift + alt - 6"
+command = "window move-to-workspace 6"
+
+# Move the focused window to workspace 7 (stay where you are).
+[[bind]]
+key = "shift + alt - 7"
+command = "window move-to-workspace 7"
+
+# Move the focused window to workspace 8 (stay where you are).
+[[bind]]
+key = "shift + alt - 8"
+command = "window move-to-workspace 8"
+
+# Move the focused window to workspace 9 (stay where you are).
+[[bind]]
+key = "shift + alt - 9"
+command = "window move-to-workspace 9"
+
+# --- floating dialogs (do not tile) ---
+# Finder Get Info windows are titled like "foo Info" and should always float.
+[[rule]]
+app = "^com\\.apple\\.finder$"
+title = ".* Info$"
+float = true
+
+# System Settings has a fixed-size window that breaks tiling.
+[[rule]]
+app = "^com\\.apple\\.system(preferences|settings)$"
+float = true

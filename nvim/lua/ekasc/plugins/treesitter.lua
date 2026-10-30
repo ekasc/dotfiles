@@ -9,7 +9,7 @@ return {
 		local parsers = {
 			"go", "json", "tsx", "css", "html", "python",
 			"javascript", "typescript", "lua", "sql",
-			"markdown", "markdown_inline",
+			"markdown", "markdown_inline", "svelte",
 		}
 
 		for _, lang in ipairs(parsers) do

@@ -1,7 +1,160 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  "default_agent": "build",
+  "small_model": "opencode-go/deepseek-v4-flash",
   "plugin": [
     "cc-safety-net@latest",
-    "@sveltejs/opencode"
-  ]
+    "@sveltejs/opencode",
+    "./plugins/goal.ts"
+  ],
+  "formatter": true,
+  "share": "manual",
+  "permission": {
+    "read": "allow",
+    "edit": "allow",
+    "glob": "allow",
+    "grep": "allow",
+    "list": "allow",
+    "lsp": "allow",
+    "webfetch": "allow",
+    "websearch": "allow",
+    "skill": "allow",
+    "todowrite": "allow",
+    "question": "allow",
+    "doom_loop": "ask",
+    "external_directory": "ask",
+    "task": "deny",
+    "bash": {
+      "*": "allow",
+      "sudo*": "deny",
+      "git reset --hard*": "deny",
+      "git clean*": "deny",
+      "git checkout -- *": "deny",
+      "git push --force*": "deny",
+      "git push -f*": "deny",
+      "git push*": "ask",
+      "git commit*": "ask"
+    }
+  },
+  "agent": {
+    "build": {
+      "mode": "primary",
+      "temperature": 0.1,
+      "permission": {
+        "task": {
+          "*": "deny",
+          "explore": "allow",
+          "specialist-frontend": "allow",
+          "specialist-backend": "allow"
+        }
+      }
+    },
+    "plan": {
+      "mode": "primary",
+      "temperature": 0.1,
+      "steps": 30,
+      "permission": {
+        "task": "deny"
+      }
+    },
+    "explore": {
+      "mode": "subagent",
+      "temperature": 0.1,
+      "steps": 30,
+      "permission": {
+        "edit": "deny",
+        "bash": "deny",
+        "task": "deny"
+      }
+    },
+    "general": {
+      "disable": true
+    },
+    "scout": {
+      "disable": true
+    }
+  },
+  "command": {
+    "goal": {
+      "template": "/goal $ARGUMENTS",
+      "description": "Set, show, pause, resume, or clear the session goal"
+    },
+    "review": {
+      "template": "Review the current uncommitted changes. Inspect the diff, identify correctness regressions, contract drift, security issues, and missing tests. Do not edit files. Return findings ordered by severity with file references.",
+      "description": "Review current changes without creating a subagent",
+      "agent": "plan"
+    },
+    "test": {
+      "template": "Detect and run the narrowest relevant project checks for the current changes. Summarize exact commands, results, failures, and likely causes. Fix nothing unless the user explicitly asks.",
+      "description": "Run relevant checks in the current session",
+      "agent": "build"
+    },
+    "recap": {
+      "template": "Summarize this session as a durable handoff: changes, decisions, verification, open risks, and exact next steps. Be concise and reference files.",
+      "description": "Create a concise session handoff"
+    }
+  },
+  "compaction": {
+    "auto": true,
+    "prune": true,
+    "reserved": 16000
+  },
+  "watcher": {
+    "ignore": [
+      "node_modules/**",
+      ".git/**",
+      "dist/**",
+      "build/**",
+      ".svelte-kit/**",
+      "coverage/**",
+      "tmp/**"
+    ]
+  },
+  "mcp": {
+    "aws-mcp": {
+      "type": "local",
+      "command": [
+        "uvx",
+        "mcp-proxy-for-aws@latest",
+        "https://aws-mcp.us-east-1.api.aws/mcp",
+        "--metadata",
+        "INSTALL_SOURCE=aws-cli"
+      ]
+    },
+    "ackd": {
+      "type": "remote",
+      "url": "https://api.ackd.app/mcp",
+      "enabled": true,
+      "headers": {
+        "Authorization": "Bearer ackd_4490e7f7_1c7d6442c10acee675a0c51a9cd21b6fa02b71fa"
+      }
+    },
+    "cloudflare-api": {
+      "type": "remote",
+      "url": "https://mcp.cloudflare.com/mcp",
+      "enabled": true
+    },
+    "rea": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "rea-agents@6.4.0",
+        "mcp"
+      ],
+      "enabled": true,
+      "environment": {
+        "GHIDRA_INSTALL_DIR": "/Applications/ghidra_12.1.4_PUBLIC"
+      }
+    }
+  },
+  "provider": {
+    "opencode-go": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "OpenCode Go",
+      "options": {
+        "baseURL": "https://opencode.ai/zen/go/v1"
+      }
+    }
+  }
 }

@@ -14,7 +14,7 @@ function module.apply_to_config(config)
 		{
 			intensity = "Bold",
 			font = wezterm.font({
-				family = "SauceCodePro Nerd Font Mono",
+				family = "Miracode",
 				weight = "Bold",
 				style = "Normal",
 			}),
@@ -22,7 +22,7 @@ function module.apply_to_config(config)
 		{
 			italic = true,
 			font = wezterm.font({
-				family = "SauceCodePro Nerd Font Mono",
+				family = "Miracode",
 				weight = "Regular",
 				style = "Italic",
 			}),
@@ -31,7 +31,7 @@ function module.apply_to_config(config)
 			intensity = "Bold",
 			italic = true,
 			font = wezterm.font({
-				family = "SauceCodePro Nerd Font Mono",
+				family = "Miracode",
 				weight = "Bold",
 				style = "Italic",
 			}),
@@ -46,10 +46,9 @@ function module.apply_to_config(config)
 	config.default_cursor_style = "SteadyBlock"
 
 	-- Window
-	config.window_background_opacity = 1
-	-- config.macos_window_background_blur = 20
+	config.window_background_opacity = 0.85
+	config.macos_window_background_blur = 20
 	config.window_decorations = "RESIZE"
-
 	-- Tab bar
 	config.enable_tab_bar = true
 	config.hide_tab_bar_if_only_one_tab = true

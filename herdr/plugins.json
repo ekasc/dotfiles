@@ -1,0 +1,167 @@
+[
+  {
+    "plugin_id": "herdr.ginger",
+    "name": "Ginger",
+    "version": "0.32.0",
+    "min_herdr_version": "0.7.0",
+    "description": "Ginger — mobile web UI to monitor and reply to your agent herd, served over Tailscale (fork of AltanS/collie)",
+    "manifest_path": "/Users/ekassinghchhabra/Projects/collie/herdr-plugin.toml",
+    "plugin_root": "/Users/ekassinghchhabra/Projects/collie",
+    "enabled": true,
+    "platforms": [
+      "linux",
+      "macos"
+    ],
+    "build": [
+      {
+        "platforms": [
+          "linux",
+          "macos"
+        ],
+        "command": [
+          "bash",
+          "scripts/collie-ctl.sh",
+          "build"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "push-keys",
+        "title": "Generate push keys",
+        "contexts": [
+          "workspace"
+        ],
+        "command": [
+          "bash",
+          "scripts/collie-ctl.sh",
+          "push-keys"
+        ]
+      },
+      {
+        "id": "push-test",
+        "title": "Send a test notification",
+        "contexts": [
+          "workspace"
+        ],
+        "command": [
+          "bash",
+          "scripts/collie-ctl.sh",
+          "push-test"
+        ]
+      },
+      {
+        "id": "restart",
+        "title": "Restart web bridge",
+        "contexts": [
+          "workspace"
+        ],
+        "command": [
+          "bash",
+          "scripts/collie-ctl.sh",
+          "restart"
+        ]
+      },
+      {
+        "id": "start",
+        "title": "Start web bridge",
+        "contexts": [
+          "workspace"
+        ],
+        "command": [
+          "bash",
+          "scripts/collie-ctl.sh",
+          "start"
+        ]
+      },
+      {
+        "id": "status",
+        "title": "Bridge status",
+        "contexts": [
+          "workspace"
+        ],
+        "command": [
+          "bash",
+          "scripts/collie-ctl.sh",
+          "status"
+        ]
+      },
+      {
+        "id": "stop",
+        "title": "Stop web bridge",
+        "contexts": [
+          "workspace"
+        ],
+        "command": [
+          "bash",
+          "scripts/collie-ctl.sh",
+          "stop"
+        ]
+      },
+      {
+        "id": "uninstall",
+        "title": "Uninstall web bridge (remove service)",
+        "contexts": [
+          "workspace"
+        ],
+        "command": [
+          "bash",
+          "scripts/collie-ctl.sh",
+          "uninstall"
+        ]
+      },
+      {
+        "id": "update",
+        "title": "Update plugin",
+        "contexts": [
+          "workspace"
+        ],
+        "command": [
+          "bash",
+          "scripts/collie-ctl.sh",
+          "update"
+        ]
+      },
+      {
+        "id": "update-major",
+        "title": "Update across a major version",
+        "contexts": [
+          "workspace"
+        ],
+        "command": [
+          "bash",
+          "scripts/collie-ctl.sh",
+          "update",
+          "--major"
+        ]
+      },
+      {
+        "id": "url",
+        "title": "Show bridge URL",
+        "contexts": [
+          "workspace"
+        ],
+        "command": [
+          "bash",
+          "scripts/collie-ctl.sh",
+          "url"
+        ]
+      },
+      {
+        "id": "version",
+        "title": "Show version",
+        "contexts": [
+          "workspace"
+        ],
+        "command": [
+          "bash",
+          "scripts/collie-ctl.sh",
+          "version"
+        ]
+      }
+    ],
+    "source": {
+      "kind": "local"
+    }
+  }
+]

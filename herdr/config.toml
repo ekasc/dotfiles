@@ -1,0 +1,82 @@
+onboarding = false
+# herdr configuration — adapted from tmux workflow
+
+[terminal]
+# Match tmux: new panes/tabs inherit the source pane's CWD
+# (tmux: bind c new-window -c "#{pane_current_path}" etc.)
+new_cwd = "follow"
+
+[keys]
+# tmux: set -g prefix C-a
+prefix = "ctrl+a"
+
+# tmux: bind r source-file ~/.config/tmux/tmux.conf
+reload_config = "prefix+r"
+
+# tmux: bind c new-window -c "#{pane_current_path}"
+new_tab = "prefix+c"
+
+# tmux: bind '"' split-window -v  (stacked panes = horizontal divider)
+# herdr default is "prefix+minus" — keep that, but also respect tmux muscle memory
+# Note: "prefix+\"" would conflict with TOML escaping; use prefix+minus or the default
+# split_horizontal = "prefix+minus"
+
+# tmux: bind % split-window -h  (side-by-side panes = vertical divider)
+# herdr default is "prefix+v" — matches tmux convention for visual "v"
+# split_vertical = "prefix+v"
+
+# tmux vi-style copy mode: v=begin selection, y=copy
+# herdr handles copy via OS clipboard integration; no direct copy-mode remap needed
+
+# Detach (tmux default is prefix+d, herdr default is prefix+q — keep herdr default)
+# detach = "prefix+q"
+
+# tmux: prefix+x closes pane
+close_pane = "prefix+x"
+
+# tmux-style vim nav for pane focus
+focus_pane_left = "prefix+h"
+focus_pane_down = "prefix+j"
+focus_pane_up = "prefix+k"
+focus_pane_right = "prefix+l"
+
+# tmux: prefix+& kills window → herdr close_tab
+close_tab = "prefix+shift+x"
+
+# tmux: prefix+, renames window → herdr rename_tab
+rename_tab = "prefix+shift+t"
+
+# tmux: prefix+n / prefix+p → herdr next_tab / previous_tab (defaults match)
+# next_tab = "prefix+n"
+# previous_tab = "prefix+p"
+
+# tmux: prefix+z zoom → herdr zoom (default matches)
+# zoom = "prefix+z"
+
+# tmux: prefix+? list-keys → herdr help (default matches)
+# help = "prefix+?"
+
+[ui]
+# Capture mouse (tmux: set -g mouse on)
+mouse_capture = true
+
+# tmux uses a status bar; herdr uses a sidebar — keep it at a usable width
+sidebar_width = 26
+
+# Pane borders on (tmux doesn't have an explicit off switch, but borders are standard)
+pane_borders = true
+
+show_agent_labels_on_pane_borders = true
+agent_panel_sort = "priority"
+status_indicators = "symbols"
+[experimental]
+# Persist pane scrollback across restarts (tmux-resurrect-like behaviour)
+pane_history = true
+
+switch_ascii_input_source_in_prefix = true
+[ui.toast]
+delivery = "system"
+
+[theme]
+name = "catppuccin"
+auto_switch = false

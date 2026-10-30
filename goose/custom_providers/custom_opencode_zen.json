@@ -1,0 +1,807 @@
+{
+  "name": "custom_opencode_zen",
+  "engine": "openai",
+  "display_name": "OpenCode Zen",
+  "description": "Custom OpenCode Zen provider",
+  "api_key_env": "CUSTOM_OPENCODE_ZEN_API_KEY",
+  "base_url": "https://opencode.ai/zen/v1",
+  "models": [
+    {
+      "name": "trinity-large-preview-free",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "deepseek-v4-pro",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "gpt-5.6-terra",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "kimi-k2.5-free",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "gpt-5.2-codex",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "glm-5",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "gpt-5-codex",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "ling-3.0-flash-free",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "gemini-3.1-pro",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "kimi-k3",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "gpt-5.4-nano",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "gemini-3.5-flash",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "claude-3.5-haiku",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "claude-opus-4.5",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "glm-5.2",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "kimi-k2.6",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "kimi-k2-thinking",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "claude-opus-4.1",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "minimax-m2.1",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "claude-fable-5",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "qwen3.6-plus",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "claude-sonnet-4.5",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "minimax-m2.7",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "north-mini-code-free",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "gpt-5.4-pro",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "gpt-5.2",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "minimax-m3",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "deepseek-v4-flash",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "nemotron-3-ultra-free",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "gpt-5.5-pro",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "gpt-5.1-codex",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "ring-2.6-1t-free",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "hy3-preview-free",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "laguna-s-2.1-free",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "qwen3.6-plus-free",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "gpt-5.3-codex-spark",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "mimo-v2-pro-free",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "kimi-k2",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "minimax-m2.5",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "deepseek-v4-flash-free",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "claude-opus-4.6",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "gpt-5.6-luna",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "mimo-v2.5-free",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "big-pickle",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "minimax-m2.5-free",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "gemini-3.6-flash",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "glm-5.1",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "kimi-k2.5",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "nemotron-3-super-free",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "gemini-3.5-flash-lite",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "gpt-5.3-codex",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "glm-5-free",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "gemini-3-pro",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "gpt-5.1",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "claude-opus-5",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "glm-4.7",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "claude-opus-4.7",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "glm-4.6",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "gpt-5.1-codex-max",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "claude-opus-4.8",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "gpt-5.1-codex-mini",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "ling-2.6-flash-free",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "kimi-k2.7-code",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "gpt-5.5",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "claude-sonnet-5",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "gpt-5.6-sol",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "claude-haiku-4.5",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "hy3-free",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "gpt-5-nano",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "minimax-m3-free",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "mimo-v2-omni-free",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "glm-4.7-free",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "grok-build-0.1",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "gemini-3-flash",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "grok-4.5",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "qwen3.5-plus",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "gpt-5.4-mini",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "gpt-5",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "gpt-5.4",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "claude-sonnet-4.6",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "longcat-2.0-free",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "claude-sonnet-4",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "ling-3.0-tiny-free",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "mimo-v2-flash-free",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "grok-code",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "qwen3-coder",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    },
+    {
+      "name": "minimax-m2.1-free",
+      "context_limit": 128000,
+      "input_token_cost": null,
+      "output_token_cost": null,
+      "currency": null,
+      "supports_cache_control": null,
+      "reasoning": false
+    }
+  ],
+  "headers": null,
+  "timeout_seconds": null,
+  "supports_streaming": true,
+  "requires_auth": true,
+  "catalog_provider_id": "opencode",
+  "base_path": null,
+  "env_vars": null,
+  "dynamic_models": null,
+  "skip_canonical_filtering": false,
+  "model_doc_link": null,
+  "setup_steps": [],
+  "fast_model": null,
+  "preserves_thinking": true,
+  "setup": null
+}

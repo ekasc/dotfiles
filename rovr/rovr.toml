@@ -1,0 +1,44 @@
+# Rovr configuration.
+# i3-style dynamic workspaces: only desktop 1 exists by default (persistent).
+# alt-2..9 spawn a desktop on demand; switching away from an empty one
+# destroys it. No [[workspace]] entries needed for the spawned ones.
+
+[[workspace]]
+name = "1"
+persistent = true
+
+# Global hotkeys are owned by skhd, not by rovr. Bindings live in
+# ~/.config/skhd/skhdrc as: key : /usr/local/bin/rovr <command>
+# rovr registers no hotkeys and has no [[bind]] table.
+
+# --- floating dialogs (do not tile) ---
+# Finder Get Info windows are titled like "foo Info" and should always float.
+[[rule]]
+app = "^com\\.apple\\.finder$"
+title = ".* Info$"
+float = true
+
+# System Settings has a fixed-size window that breaks tiling.
+[[rule]]
+app = "^com\\.apple\\.system(preferences|settings)$"
+float = true
+
+# iPhone Mirroring / Screen Continuity is fixed-size and can never accept a
+# tile, so ignore it entirely — it must not enter the layout and drag a
+# tileable neighbour into the non-convergence fallback.
+[[rule]]
+app = "^com\\.apple\\.ScreenContinuity$"
+manage = false
+
+# Quick Look (spacebar preview / qlmanage) is an overlay panel, never tiled.
+[[rule]]
+app = "^com\\.apple\\.quicklook\\.(QuickLookUIService|qlmanage)$"
+manage = false
+
+[layout.padding]
+bottom = 28
+
+# Remove macOS window shadows from every managed window (scripting addition
+# `set_window_shadow`). Applies to windows observed later too.
+[general]
+window_shadow = false

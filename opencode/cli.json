@@ -1,0 +1,36 @@
+{
+  "theme": {
+    "name": "catppuccin",
+    "mode": "dark"
+  },
+  "scroll": {
+    "acceleration": true
+  },
+  "attention": {
+    "enabled": true,
+    "notifications": true,
+    "sound": true,
+    "volume": 0.4
+  },
+  "diffs": {
+    "wrap": "word",
+    "view": "auto"
+  },
+  "session": {
+    "sidebar": "hide",
+    "scrollbar": true,
+    "thinking": "show",
+    "markdown": "rendered",
+    "grouping": "auto",
+    "image_preview": true,
+    "verbosity": "medium"
+  },
+  "animations": true,
+  "mouse": true,
+  "plugins": [
+    "./herdr-opencode"
+  ],
+  "tabs": {
+    "layout": "horizontal"
+  }
+}

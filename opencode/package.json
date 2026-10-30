@@ -1,0 +1,14 @@
+{
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@opencode-ai/plugin": "1.17.18"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "typescript": "latest"
+  },
+  "scripts": {
+    "check": "tsc --noEmit"
+  }
+}

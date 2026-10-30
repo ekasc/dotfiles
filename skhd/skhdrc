@@ -1,110 +1,109 @@
+# skhd owns every global hotkey. Rovr registers none.
+#
+# Conventions:
+#   rovr is referenced by ABSOLUTE PATH (/usr/local/bin/rovr) because skhd does
+#   not inherit your login PATH. This must be the SAME build the rovr daemon
+#   runs (/usr/local/bin/rovrd); a dev target/ build will disagree with it.
+#   Commands default to the focused window / focused space, so most binds need
+#   no `rovr query focused` subshell. Only `space destroy` does.
+#
+# Backups: skhdrc.pre-rovrbinds.bak (state before binds moved into rovr.toml)
+#          skhdrc.yabai.bak (original yabai config)
+
 # restart services
-# shift + alt - r : sketchybar --reload && yabai --restart-service && skhd --reload
-shift + alt - r : sketchybar --reload && yabai --restart-service && skhd --reload
+# Reloads rovr config and self-heals workspace/Space topology.
+shift + alt - r : /usr/local/bin/rovr config reload
 
 # terminal
-# alt - return : open /Applications/Ghostty.app
-# alt - return : arch -arm64 /Applications/Alacritty.app/Contents/MacOS/alacritty
 alt - return : open -na WezTerm
-# alt - return : /Applications/Rio.app/Contents/MacOS/rio
-# alt - return : /Applications/kitty.app/Contents/MacOS/kitty
 
 # browser
-# alt - b : /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome
-alt - b : /Applications/Brave\ Browser.app/Contents/MacOS/Brave\ Browser
-# alt - a : /Applications/Firefox\ Developer\ Edition.app/Contents/MacOS/firefox-bin 
-# alt - b : /Applications/Firefox.app/Contents/MacOS/Firefox
+alt - b : /Applications/Helium.app/Contents/MacOS/Helium
 alt - f : open /System/Library/CoreServices/Finder.app
 
-alt - a : yabai -m space --create
-shift + alt - a : yabai -m space --destroy
-shift + alt - q : yabai -m window --close
+# ---- rovr: space lifecycle ----
+alt - a : /usr/local/bin/rovr space create
+shift + alt - a : /usr/local/bin/rovr space destroy $(/usr/local/bin/rovr query focused | /opt/homebrew/bin/jq -r '.result.space_id // empty')
 
-# toggle fullscreen with gaps
-#alt - f : yabai -m window --toggle zoom-fullscreen && ~/bin/toggle_alacritty_opacity
-shift + alt - f : yabai -m window --toggle native-fullscreen
-# shift + alt - t : ~/bin/wezterm
+# External-display space stepping: alt+tab / alt+shift+tab.
+# No display argument = the display that currently has keyboard focus.
+# Pass `main` or a numeric display id to pin this to a specific display.
+alt - tab : /usr/local/bin/rovr space next
+alt + shift - tab : /usr/local/bin/rovr space prev
+# Switch to the space that was current before this one.
+alt - space : /usr/local/bin/rovr space focus-recent
+# Collapse/restore all gap+padding for the session.
+alt - g : /usr/local/bin/rovr space toggle-insets
 
-# Rotate
-shift + alt - s : yabai -m space --rotate 90
+# ---- rovr: windows ----
+shift + alt - q : /usr/local/bin/rovr window close
+shift + alt - f : /usr/local/bin/rovr window toggle-fullscreen
+# Overrides the system "Enter Full Screen" shortcut (disabled in symbolic hotkeys).
+ctrl + cmd - f : /usr/local/bin/rovr window toggle-fullscreen
+# Topmost = floating layer (kCGFloatingWindowLevel).
+alt - p : /usr/local/bin/rovr window set-layer 3
+alt - t : /usr/local/bin/rovr window toggle-float
 
-# toggle topmost (keep above other windows)
+# Directional focus / warp / swap against the BSP tree.
+alt - h : /usr/local/bin/rovr window focus-direction west
+alt - j : /usr/local/bin/rovr window focus-direction south
+alt - k : /usr/local/bin/rovr window focus-direction north
+alt - l : /usr/local/bin/rovr window focus-direction east
+shift + alt - h : /usr/local/bin/rovr window warp-dir west
+shift + alt - j : /usr/local/bin/rovr window warp-dir south
+shift + alt - k : /usr/local/bin/rovr window warp-dir north
+shift + alt - l : /usr/local/bin/rovr window warp-dir east
+ctrl + alt - h : /usr/local/bin/rovr window swap-dir west
+ctrl + alt - j : /usr/local/bin/rovr window swap-dir south
+ctrl + alt - k : /usr/local/bin/rovr window swap-dir north
+ctrl + alt - l : /usr/local/bin/rovr window swap-dir east
 
-alt - p : yabai -m window --toggle topmost
+# Send the focused window to the physically adjacent display (follows the
+# monitor arrangement in System Settings > Displays).
+alt - left : /usr/local/bin/rovr window move-to-display west
+alt - right : /usr/local/bin/rovr window move-to-display east
+# Create a fresh Space on the adjacent display, send the window there, follow.
+shift + alt - left : /usr/local/bin/rovr window move-to-new-space west
+shift + alt - right : /usr/local/bin/rovr window move-to-new-space east
 
-# move window
-shift + alt - h : yabai -m window --warp west
-shift + alt - j : yabai -m window --warp south
-shift + alt - k : yabai -m window --warp north
-shift + alt - l : yabai -m window --warp east
+# Resize one edge by delta points (positive = outward).
+alt - y : /usr/local/bin/rovr window resize west -20 ; /usr/local/bin/rovr window resize east -20
+alt - u : /usr/local/bin/rovr window resize south 20 ; /usr/local/bin/rovr window resize north 20
+alt - i : /usr/local/bin/rovr window resize north -20 ; /usr/local/bin/rovr window resize south -20
+alt - o : /usr/local/bin/rovr window resize east 20 ; /usr/local/bin/rovr window resize west 20
 
-# focus window
-alt - h : yabai -m window --focus west
-alt - j : yabai -m window --focus south
-alt - k : yabai -m window --focus north
-alt - l : yabai -m window --focus east
+# ---- rovr: layout ----
+shift + alt - s : /usr/local/bin/rovr layout rotate
+shift + alt - 0 : /usr/local/bin/rovr layout balance
 
-# swap with another window (obtaining its size and position)
-ctrl + alt - h : yabai -m window --swap west
-ctrl + alt - j : yabai -m window --swap south
-ctrl + alt - k : yabai -m window --swap north
-ctrl + alt - l : yabai -m window --swap east
+# ---- rovr: workspaces (logical, survives Dock Space-ID churn) ----
+alt - 1 : /usr/local/bin/rovr workspace focus 1
+alt - 2 : /usr/local/bin/rovr workspace focus 2
+alt - 3 : /usr/local/bin/rovr workspace focus 3
+alt - 4 : /usr/local/bin/rovr workspace focus 4
+alt - 5 : /usr/local/bin/rovr workspace focus 5
+alt - 6 : /usr/local/bin/rovr workspace focus 6
+alt - 7 : /usr/local/bin/rovr workspace focus 7
+alt - 8 : /usr/local/bin/rovr workspace focus 8
+alt - 9 : /usr/local/bin/rovr workspace focus 9
 
-# change spaces
-alt - 1 : $HOME/.config/yabai/scripts/focus-space-number.sh 1
-alt - 2 : $HOME/.config/yabai/scripts/focus-space-number.sh 2
-alt - 3 : $HOME/.config/yabai/scripts/focus-space-number.sh 3
-alt - 4 : $HOME/.config/yabai/scripts/focus-space-number.sh 4
-alt - 5 : $HOME/.config/yabai/scripts/focus-space-number.sh 5
-alt - 6 : $HOME/.config/yabai/scripts/focus-space-number.sh 6
-alt - 7 : $HOME/.config/yabai/scripts/focus-space-number.sh 7
-alt - 8 : $HOME/.config/yabai/scripts/focus-space-number.sh 8
-alt - 9 : $HOME/.config/yabai/scripts/focus-space-number.sh 9
+# Send the focused window to workspace N (without following it).
+ctrl + alt - 1 : /usr/local/bin/rovr window move-to-workspace 1
+ctrl + alt - 2 : /usr/local/bin/rovr window move-to-workspace 2
+ctrl + alt - 3 : /usr/local/bin/rovr window move-to-workspace 3
+ctrl + alt - 4 : /usr/local/bin/rovr window move-to-workspace 4
+ctrl + alt - 5 : /usr/local/bin/rovr window move-to-workspace 5
+ctrl + alt - 6 : /usr/local/bin/rovr window move-to-workspace 6
+ctrl + alt - 7 : /usr/local/bin/rovr window move-to-workspace 7
+ctrl + alt - 8 : /usr/local/bin/rovr window move-to-workspace 8
+ctrl + alt - 9 : /usr/local/bin/rovr window move-to-workspace 9
 
-# send window to space and focus
-ctrl + alt - 1 : $HOME/.config/yabai/scripts/move-window-to-space-number.sh 1 --focus
-ctrl + alt - 2 : $HOME/.config/yabai/scripts/move-window-to-space-number.sh 2 --focus
-ctrl + alt - 3 : $HOME/.config/yabai/scripts/move-window-to-space-number.sh 3 --focus
-ctrl + alt - 4 : $HOME/.config/yabai/scripts/move-window-to-space-number.sh 4 --focus
-ctrl + alt - 5 : $HOME/.config/yabai/scripts/move-window-to-space-number.sh 5 --focus
-ctrl + alt - 6 : $HOME/.config/yabai/scripts/move-window-to-space-number.sh 6 --focus
-ctrl + alt - 7 : $HOME/.config/yabai/scripts/move-window-to-space-number.sh 7 --focus
-ctrl + alt - 8 : $HOME/.config/yabai/scripts/move-window-to-space-number.sh 8 --focus
-ctrl + alt - 9 : $HOME/.config/yabai/scripts/move-window-to-space-number.sh 9 --focus
-
-# send window to space
-shift + alt - 1 : $HOME/.config/yabai/scripts/move-window-to-space-number.sh 1
-shift + alt - 2 : $HOME/.config/yabai/scripts/move-window-to-space-number.sh 2
-shift + alt - 3 : $HOME/.config/yabai/scripts/move-window-to-space-number.sh 3
-shift + alt - 4 : $HOME/.config/yabai/scripts/move-window-to-space-number.sh 4
-shift + alt - 5 : $HOME/.config/yabai/scripts/move-window-to-space-number.sh 5
-shift + alt - 6 : $HOME/.config/yabai/scripts/move-window-to-space-number.sh 6
-shift + alt - 7 : $HOME/.config/yabai/scripts/move-window-to-space-number.sh 7
-shift + alt - 8 : $HOME/.config/yabai/scripts/move-window-to-space-number.sh 8
-shift + alt - 9 : $HOME/.config/yabai/scripts/move-window-to-space-number.sh 9
-
-# Resize windows
-alt - y : \
-    yabai -m window --resize left:-20:0 ; \
-    yabai -m window --resize right:-20:0
-alt - u : \
-    yabai -m window --resize bottom:0:20 ; \
-    yabai -m window --resize top:0:20
-alt - i : \
-    yabai -m window --resize top:0:-20 ; \
-    yabai -m window --resize bottom:0:-20
-alt - o : \
-    yabai -m window --resize right:20:0 ; \
-    yabai -m window --resize left:20:0
-
-# float / unfloat window and restore position
-alt - t: yabai -m window --toggle float && yabai -m window --grid 4:4:1:1:2:2
-
-# Toggle gaps
-alt - g : yabai -m space --toggle padding; yabai -m space --toggle gap
-
-# balance size of windows
-shift + alt - 0 : yabai -m space --balance
-
-# fast focus desktop
-alt - space : yabai -m space --focus recent
+shift + alt - 1 : /usr/local/bin/rovr window move-to-workspace 1
+shift + alt - 2 : /usr/local/bin/rovr window move-to-workspace 2
+shift + alt - 3 : /usr/local/bin/rovr window move-to-workspace 3
+shift + alt - 4 : /usr/local/bin/rovr window move-to-workspace 4
+shift + alt - 5 : /usr/local/bin/rovr window move-to-workspace 5
+shift + alt - 6 : /usr/local/bin/rovr window move-to-workspace 6
+shift + alt - 7 : /usr/local/bin/rovr window move-to-workspace 7
+shift + alt - 8 : /usr/local/bin/rovr window move-to-workspace 8
+shift + alt - 9 : /usr/local/bin/rovr window move-to-workspace 9
