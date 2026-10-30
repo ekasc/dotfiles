@@ -29,3 +29,49 @@ texput.log
 /thefuck
 /uv
 /dynamic-island-sketchybar
+
+# pi runtime state and decision logs
+.pi/
+**/.pi/
+
+# installed app bundles and browser profiles
+browseruse/
+herdr-app/
+raycast/
+
+# syncthing metadata and package artifacts
+opencode/.stfolder/
+opencode/.stignore
+opencode/.stversions/
+opencode/node_modules/
+opencode/*.bak*
+opencode/*.backup
+
+# tool credentials and machine-local state
+agentnet/config.json
+opencode/service.json
+stripe/
+muse/auth.json
+muse/trust.json
+muse/*.lock
+rovr/state.json
+goose/secrets.yaml*
+goose/*_oauth/
+
+# herdr runtime (plugins, sessions, sockets, logs)
+herdr/.plugins.lock
+herdr/*.log
+herdr/*.sock
+herdr/*.sock.agent
+herdr/plugins/
+herdr/release-notes.json
+herdr/session-history.json
+herdr/session-snapshots/
+herdr/session.json
+
+# transient backups
+sketchybar.backup-*/
+skhd/*.bak
+skhd/*.removed
+rovr/*.bak
+goose/*.backup-*
